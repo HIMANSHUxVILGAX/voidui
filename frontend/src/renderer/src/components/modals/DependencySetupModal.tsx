@@ -87,7 +87,7 @@ export const DependencySetupModal: React.FC<DependencySetupModalProps> = ({
           ) : (
             <>
               <p className="text-zinc-400 font-sans leading-relaxed">
-                NO-ASH can run real CLI security tools on your host machine or fall back to native
+                VOID can run real CLI security tools on your host machine or fall back to native
                 built-in Python tools. Here is your current environment status:
               </p>
 

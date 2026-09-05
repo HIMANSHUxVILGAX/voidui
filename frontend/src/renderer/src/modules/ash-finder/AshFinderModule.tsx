@@ -1,12 +1,13 @@
 import React from 'react'
 import { Code } from 'lucide-react'
 
-interface AshFinderModuleProps {
+export interface MagModuleProps {
   activeMod: string
 }
+export type AshFinderModuleProps = MagModuleProps
 
-export const AshFinderModule: React.FC<AshFinderModuleProps> = ({ activeMod }) => {
-  if (activeMod !== 'settings' && activeMod !== 'finder') return null
+export const MagModule: React.FC<MagModuleProps> = ({ activeMod }) => {
+  if (activeMod !== 'settings' && activeMod !== 'finder' && activeMod !== 'mag') return null
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center bg-[#050508] text-[#e8e4dc] font-mono h-full w-full select-none relative overflow-hidden">
@@ -21,13 +22,15 @@ export const AshFinderModule: React.FC<AshFinderModuleProps> = ({ activeMod }) =
 
         <div className="space-y-1.5">
           <h2 className="text-base font-bold tracking-widest uppercase text-white font-mono">
-            // Begin Coding
+            // MAG
           </h2>
           <p className="text-xs text-[#8b9094] font-light">
-            AshFinder runtime environment standby.
+            mantor and guide runtime environment standby.
           </p>
         </div>
       </div>
     </div>
   )
 }
+
+export const AshFinderModule = MagModule

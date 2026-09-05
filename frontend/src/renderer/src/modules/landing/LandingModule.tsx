@@ -328,10 +328,10 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
           p === 0.0
             ? 0.0
             : p === 1.0
-            ? 1.0
-            : p < 0.5
-            ? Math.pow(2.0, 20.0 * p - 10.0) / 2.0
-            : (2.0 - Math.pow(2.0, -20.0 * p + 10.0)) / 2.0
+              ? 1.0
+              : p < 0.5
+                ? Math.pow(2.0, 20.0 * p - 10.0) / 2.0
+                : (2.0 - Math.pow(2.0, -20.0 * p + 10.0)) / 2.0
 
         const i3 = i * 3
         aStart[i3] = aStart[i3] + (aTarget[i3] - aStart[i3]) * ease
@@ -385,7 +385,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
       const w = containerRef.current?.clientWidth || window.innerWidth
       const h = containerRef.current?.clientHeight || window.innerHeight
       const rect = containerRef.current?.getBoundingClientRect()
-      
+
       // Calculate active scale applied to the container (if any) to un-scale client coordinates
       const scaleX = rect && containerRef.current ? rect.width / (containerRef.current.offsetWidth || 1) : 1
       const scaleY = rect && containerRef.current ? rect.height / (containerRef.current.offsetHeight || 1) : 1
@@ -516,11 +516,11 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
         if (containerRef.current.offsetWidth > 0) scaleX = rect.width / containerRef.current.offsetWidth
         if (containerRef.current.offsetHeight > 0) scaleY = rect.height / containerRef.current.offsetHeight
       }
-      
+
       // Divide by scale to ensure the custom cursor matches the physical OS cursor when the app is zoomed
       mx = e.clientX / scaleX
       my = e.clientY / scaleY
-      
+
       if (dot) dot.style.transform = `translate3d(${mx}px, ${my}px, 0) scale(${currentScale})`
     }
 
@@ -609,41 +609,36 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
           <div className="h-3 w-px bg-line mx-1 hidden sm:block"></div>
           <button
             onClick={() => scrollToSection('s1')}
-            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${
-              activeSectionIdx === 0 ? 'nav-active' : ''
-            }`}
+            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 0 ? 'nav-active' : ''
+              }`}
           >
             Overview
           </button>
           <button
             onClick={() => scrollToSection('s2')}
-            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${
-              activeSectionIdx === 1 ? 'nav-active' : ''
-            }`}
+            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 1 ? 'nav-active' : ''
+              }`}
           >
             Arsenal
           </button>
           <button
             onClick={() => scrollToSection('s3')}
-            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${
-              activeSectionIdx === 2 ? 'nav-active' : ''
-            }`}
+            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 2 ? 'nav-active' : ''
+              }`}
           >
             Pipeline
           </button>
           <button
             onClick={() => scrollToSection('s4')}
-            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${
-              activeSectionIdx === 3 ? 'nav-active' : ''
-            }`}
+            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 3 ? 'nav-active' : ''
+              }`}
           >
             Telemetry
           </button>
           <button
             onClick={() => scrollToSection('s5')}
-            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${
-              activeSectionIdx === 4 ? 'nav-active' : ''
-            }`}
+            className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 4 ? 'nav-active' : ''
+              }`}
           >
             Modules
           </button>
@@ -670,7 +665,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
             scrollToSection('s1')
           }}
         >
-          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
         </button>
 
         <div className="w-[46px] flex justify-center py-0.5">
@@ -680,46 +675,46 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
         <button
           data-mod="nodes"
           className={`side-icon-btn hover-target group ${activeMod === 'nodes' ? 'active' : ''}`}
-          title="AshCode Editor (Sandboxed Workspace)"
+          title="DCS // developer's colabrative space"
           onClick={() => onSwitchModule('nodes')}
         >
-          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></svg>
         </button>
 
         <button
           data-mod="ide"
           className={`side-icon-btn hover-target group ${activeMod === 'ide' ? 'active' : ''}`}
-          title="SuperForge AI Security Engine"
+          title="lumen"
           onClick={() => onSwitchModule('ide')}
         >
-          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></svg>
+          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="16" x="4" y="4" rx="2" /><rect width="6" height="6" x="9" y="9" /><path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" /><path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" /></svg>
         </button>
 
         <button
           data-mod="timeline"
           className={`side-icon-btn hover-target group ${activeMod === 'timeline' ? 'active' : ''}`}
-          title="Avanger Active Threat Defense"
+          title="quark"
           onClick={() => onSwitchModule('timeline')}
         >
-          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="M12 8v4" /><path d="M12 16h.01" /></svg>
         </button>
 
         <button
           data-mod="bento"
           className={`side-icon-btn hover-target group ${activeMod === 'bento' ? 'active' : ''}`}
-          title="elumPot Deception Honeynet"
+          title="optics"
           onClick={() => onSwitchModule('bento')}
         >
-          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9c3.9 3.9 3.9 10.2 0 14.1"/></svg>
+          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9" /><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" /><circle cx="12" cy="12" r="2" /><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5" /><path d="M19.1 4.9c3.9 3.9 3.9 10.2 0 14.1" /></svg>
         </button>
 
         <button
           data-mod="settings"
           className={`side-icon-btn hover-target group ${activeMod === 'settings' ? 'active' : ''}`}
-          title="AshFinder Cyber Intelligence"
+          title="MAG // mantor and guide"
           onClick={() => onSwitchModule('settings')}
         >
-          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="4" y1="21" y2="14"/><line x1="4" x2="4" y1="10" y2="3"/><line x1="12" x2="12" y1="21" y2="12"/><line x1="12" x2="12" y1="8" y2="3"/><line x1="20" x2="20" y1="21" y2="16"/><line x1="20" x2="20" y1="12" y2="3"/><line x1="1" x2="7" y1="14" y2="14"/><line x1="9" x2="15" y1="8" y2="8"/><line x1="17" x2="23" y1="16" y2="16"/></svg>
+          <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="4" y1="21" y2="14" /><line x1="4" x2="4" y1="10" y2="3" /><line x1="12" x2="12" y1="21" y2="12" /><line x1="12" x2="12" y1="8" y2="3" /><line x1="20" x2="20" y1="21" y2="16" /><line x1="20" x2="20" y1="12" y2="3" /><line x1="1" x2="7" y1="14" y2="14" /><line x1="9" x2="15" y1="8" y2="8" /><line x1="17" x2="23" y1="16" y2="16" /></svg>
         </button>
       </aside>
 
@@ -741,9 +736,8 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
             <button
               key={item.id}
               onClick={() => scrollToSection(item.id)}
-              className={`rail-item hover-target flex items-center gap-2.5 text-right transition-colors text-dim hover:text-bone ${
-                activeSectionIdx === item.idx ? 'active' : ''
-              }`}
+              className={`rail-item hover-target flex items-center gap-2.5 text-right transition-colors text-dim hover:text-bone ${activeSectionIdx === item.idx ? 'active' : ''
+                }`}
               data-idx={item.idx}
             >
               <span className="rail-label font-mono text-[10px] uppercase tracking-[.18em] whitespace-nowrap opacity-0">
@@ -855,22 +849,22 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
 
             <div className="disc-label top-[12%] left-0 cursor-pointer" onClick={() => onSwitchModule('nodes')}>
               <div className="disc-num mb-1 text-foam">I</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">AshCode</div>
-              <div className="disc-sub mt-1 text-dim">Sandboxed IDE & Monaco Buffer</div>
+              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">DCS</div>
+              <div className="disc-sub mt-1 text-dim">developer's colabrative space</div>
             </div>
             <div className="disc-label bottom-[12%] left-0 cursor-pointer" onClick={() => onSwitchModule('ide')}>
               <div className="disc-num mb-1 text-foam">II</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">SuperForge</div>
+              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">lumen</div>
               <div className="disc-sub mt-1 text-dim">AI Security Agent & Synthesis</div>
             </div>
             <div className="disc-label top-[12%] right-0 text-right cursor-pointer" onClick={() => onSwitchModule('timeline')}>
               <div className="disc-num mb-1 text-foam">III</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">Avanger</div>
+              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">quark</div>
               <div className="disc-sub mt-1 text-dim">Real-time Threat Scanner</div>
             </div>
             <div className="disc-label bottom-[12%] right-0 text-right cursor-pointer" onClick={() => onSwitchModule('bento')}>
               <div className="disc-num mb-1 text-foam">IV</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">elumPot</div>
+              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">optics</div>
               <div className="disc-sub mt-1 text-dim">Deception HoneyGrid & Forensics</div>
             </div>
           </div>
@@ -917,7 +911,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
                 <div>
                   <div className="flex items-center justify-between font-mono text-[10px] text-foam mb-4"><span>03</span><span>REAL-TIME</span></div>
                   <h3 className="font-display text-xl font-bold text-foam">Synthesis</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">SuperForge AI neural core generates patched routines and verified exploit signatures.</p>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">lumen neural core generates patched routines and verified exploit signatures.</p>
                 </div>
                 <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-foam/90 rounded-full"></div></div>
               </div>
@@ -925,7 +919,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
                 <div>
                   <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>04</span><span>ACTIVE</span></div>
                   <h3 className="font-display text-xl font-bold">Deception</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">elumPot traps redirect attacker payloads into virtual honeypot honeynets.</p>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">optics traps redirect attacker payloads into virtual honeypot honeynets.</p>
                 </div>
                 <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
               </div>
@@ -1011,9 +1005,9 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
               <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-8 anim-el">
                 <div>
                   <div className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase mb-3">CORE 01 & 02</div>
-                  <h3 className="font-display text-2xl font-bold text-bone mb-3">AshCode + SuperForge AI</h3>
+                  <h3 className="font-display text-2xl font-bold text-bone mb-3">DCS + lumen</h3>
                   <p className="text-[15px] leading-relaxed font-light text-mist">
-                    Write code in a zero-trust environment with instant AI security auditing, AST static analysis, and automated vulnerability patching.
+                    Write code in a zero-trust environment with aegis AI security auditing, AST static analysis, and automated vulnerability patching.
                   </p>
                 </div>
                 <div>
@@ -1029,7 +1023,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
               <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-8 anim-el">
                 <div>
                   <div className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase mb-3">CORE 03 & 04</div>
-                  <h3 className="font-display text-2xl font-bold text-bone mb-3">Avanger Scanner + elumPot</h3>
+                  <h3 className="font-display text-2xl font-bold text-bone mb-3">quark + optics</h3>
                   <p className="text-[15px] leading-relaxed font-light text-mist">
                     Real-time intrusion detection and virtual honeypots that trap, analyze, and neutralize active network exploits and malware payloads.
                   </p>
@@ -1046,11 +1040,11 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
               </div>
             </div>
             <div className="pt-10 border-t border-line/60 flex flex-wrap items-center justify-center gap-8 sm:gap-12 font-mono text-[11px] uppercase tracking-[.25em] text-dim anim-el">
-              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('nodes')}>ASHCODE IDE</span>
-              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('ide')}>SUPERFORGE AI</span>
-              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('timeline')}>AVANGER SCANNER</span>
-              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('bento')}>ELUMPOT HONEYNET</span>
-              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('settings')}>ASHFINDER RECON</span>
+              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('nodes')}>DCS</span>
+              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('ide')}>LUMEN</span>
+              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('timeline')}>QUARK</span>
+              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('bento')}>OPTICS</span>
+              <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('settings')}>MAG</span>
             </div>
           </div>
         </section>
@@ -1109,10 +1103,10 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[.2em] text-dim mb-5 font-semibold">ENGINES</div>
                 <ul className="space-y-3 text-[13px] text-mist">
-                  <li><button onClick={() => onSwitchModule('nodes')} className="hover-target hover:text-bone transition">AshCode IDE</button></li>
-                  <li><button onClick={() => onSwitchModule('ide')} className="hover-target hover:text-bone transition">SuperForge AI</button></li>
-                  <li><button onClick={() => onSwitchModule('timeline')} className="hover-target hover:text-bone transition">Avanger Scanner</button></li>
-                  <li><button onClick={() => onSwitchModule('bento')} className="hover-target hover:text-bone transition">elumPot HoneyNet</button></li>
+                  <li><button onClick={() => onSwitchModule('nodes')} className="hover-target hover:text-bone transition">DCS</button></li>
+                  <li><button onClick={() => onSwitchModule('ide')} className="hover-target hover:text-bone transition">lumen</button></li>
+                  <li><button onClick={() => onSwitchModule('timeline')} className="hover-target hover:text-bone transition">quark</button></li>
+                  <li><button onClick={() => onSwitchModule('bento')} className="hover-target hover:text-bone transition">optics</button></li>
                 </ul>
               </div>
               <div>
@@ -1135,7 +1129,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-wider text-dim pt-6 border-t border-line/40">
-              <span>© 2026 VØID STUDIO — NO-ASH ENTERPRISE SECURITY</span>
+              <span>© 2026 VØID STUDIO — VOID</span>
               <span>VOID RUNTIME v1.0.0</span>
               <button onClick={() => scrollToSection('s1')} className="hover-target hover:text-foam transition">
                 BACK TO TOP ↑

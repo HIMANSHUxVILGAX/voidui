@@ -3,11 +3,12 @@ import sys
 import subprocess
 import PyInstaller.__main__
 
+
 def build_standalone_backend():
-    """Builds NO-ASH Python Backend into a single executable binary using PyInstaller.
+    """Builds VOID Python Backend into a single executable binary using PyInstaller.
     Eliminates dependency on virtualenv (venv) or system python installation.
     """
-    print("[PyInstaller] Building NO-ASH Standalone Backend Binary...")
+    print("[PyInstaller] Building VOID Standalone Backend Binary...")
     base_dir = os.path.dirname(os.path.abspath(__file__))
     main_script = os.path.join(base_dir, "app", "main.py")
     dist_dir = os.path.join(base_dir, "dist")
@@ -15,7 +16,7 @@ def build_standalone_backend():
 
     args = [
         main_script,
-        "--name=noash-backend",
+        "--name=void-backend",
         "--onedir",
         "--noconfirm",
         "--clean",
@@ -50,7 +51,9 @@ def build_standalone_backend():
 
     print(f"[PyInstaller] Executing PyInstaller with args: {args}")
     PyInstaller.__main__.run(args)
-    print(f"[PyInstaller] Standalone backend binary successfully created at: {os.path.join(dist_dir, 'noash-backend')}")
+    print(
+        f"[PyInstaller] Standalone backend binary successfully created at: {os.path.join(dist_dir, 'void-backend')}")
+
 
 if __name__ == "__main__":
     build_standalone_backend()

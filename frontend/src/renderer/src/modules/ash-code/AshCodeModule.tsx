@@ -5,15 +5,16 @@ import TerminalComponent from './Terminal'
 import Explorer, { OpenedFile } from './Explorer/Explorer'
 import { Code, Terminal as TerminalIcon, FileCode, ChevronUp, ChevronDown } from 'lucide-react'
 
-interface AshCodeModuleProps {
+export interface DcsModuleProps {
 	activeMod: string
 }
+export type AshCodeModuleProps = DcsModuleProps
 
 loader.config({ monaco })
 
 const PLACEHOLDER_VALUE = `// ==========================================
-// VØID STUDIO // ASHCODE SECURE RUNTIME
-// Zero-Trust Sandboxed Development Engine
+// VØID STUDIO // DCS SECURE RUNTIME
+// developer's colabrative space
 // ==========================================
 
 function initializeEnvironment() {
@@ -23,7 +24,7 @@ function initializeEnvironment() {
 initializeEnvironment();
 `
 
-export const AshCodeModule: React.FC<AshCodeModuleProps> = ({ activeMod }) => {
+export const DcsModule: React.FC<DcsModuleProps> = ({ activeMod }) => {
 	const [activeFile, setActiveFile] = useState<OpenedFile | null>(null)
 	const [editorValue, setEditorValue] = useState<string>(PLACEHOLDER_VALUE)
 	const [isTerminalExpanded, setIsTerminalExpanded] = useState<boolean>(true)
@@ -41,7 +42,7 @@ export const AshCodeModule: React.FC<AshCodeModuleProps> = ({ activeMod }) => {
 		setEditorValue(file.content)
 	}
 
-	if (activeMod !== 'nodes' && activeMod !== 'code') return null
+	if (activeMod !== 'nodes' && activeMod !== 'code' && activeMod !== 'dcs') return null
 
 	return (
 		<div className="flex-1 flex flex-row h-full w-full overflow-hidden bg-[#050508] text-[#e8e4dc] select-none">
@@ -113,16 +114,15 @@ export const AshCodeModule: React.FC<AshCodeModuleProps> = ({ activeMod }) => {
 
 				{/* Integrated Bottom Terminal */}
 				<div
-					className={`border-t border-white/10 bg-black flex flex-col transition-all duration-200 shrink-0 ${
-						isTerminalExpanded ? 'h-[38%]' : 'h-8'
-					}`}
+					className={`border-t border-white/10 bg-black flex flex-col transition-all duration-200 shrink-0 ${isTerminalExpanded ? 'h-[38%]' : 'h-8'
+						}`}
 				>
 					{/* Terminal Header Bar */}
 					<div className="h-8 px-4 bg-[#09090d] border-b border-white/5 flex items-center justify-between shrink-0 select-none">
 						<div className="flex items-center space-x-2 text-xs font-mono text-[#8b9094]">
 							<TerminalIcon className="w-3.5 h-3.5 text-[#c89b3c]" />
 							<span className="text-[#e8e4dc] font-bold text-[11px] uppercase tracking-wider">
-								ASHCODE TERMINAL <span className="text-[#8b9094] font-normal">{'//'} LOCAL PTY</span>
+								DCS TERMINAL <span className="text-[#8b9094] font-normal">{'//'} LOCAL PTY</span>
 							</span>
 						</div>
 
@@ -152,3 +152,5 @@ export const AshCodeModule: React.FC<AshCodeModuleProps> = ({ activeMod }) => {
 		</div>
 	)
 }
+
+export const AshCodeModule = DcsModule

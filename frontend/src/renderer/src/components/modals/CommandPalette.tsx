@@ -24,12 +24,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   if (!isOpen) return null
 
   const commands = [
-    { id: 'front', label: '0. Overview // VØID Landing Matrix', shortcut: 'ESC' },
-    { id: 'nodes', label: '1. AshCode // Sandboxed Workspace', shortcut: 'MOD 1' },
-    { id: 'ide', label: '2. SuperForge // AI Security Engine', shortcut: 'MOD 2' },
-    { id: 'timeline', label: '3. Avanger // Threat Scanner', shortcut: 'MOD 3' },
-    { id: 'bento', label: '4. elumPot // Deception HoneyNet', shortcut: 'MOD 4' },
-    { id: 'settings', label: '5. AshFinder // Reconnaissance', shortcut: 'MOD 5' }
+    { id: 'front', label: '0. Overview // VOID', shortcut: 'ESC' },
+    { id: 'nodes', label: "1. DCS // developer's colabrative space", shortcut: 'MOD 1' },
+    { id: 'ide', label: '2. lumen', shortcut: 'MOD 2' },
+    { id: 'timeline', label: '3. quark', shortcut: 'MOD 3' },
+    { id: 'bento', label: '4. optics', shortcut: 'MOD 4' },
+    { id: 'settings', label: '5. MAG // mantor and guide', shortcut: 'MOD 5' }
   ]
 
   const filteredCommands = commands.filter((cmd) =>

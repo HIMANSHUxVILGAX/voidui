@@ -24,9 +24,10 @@ import {
   MapPin
 } from 'lucide-react'
 
-interface ElumPotModuleProps {
+export interface OpticsModuleProps {
   activeMod: string
 }
+export type ElumPotModuleProps = OpticsModuleProps
 
 export interface IntrusionLog {
   id: string
@@ -96,7 +97,7 @@ class MapErrorBoundary extends React.Component<
   }
 }
 
-export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
+export const OpticsModule: React.FC<OpticsModuleProps> = ({ activeMod }) => {
   const [daemonActive, setDaemonActive] = useState<boolean>(true)
   const [livePorts, setLivePorts] = useState<{ ssh: number; web: number }>({ ssh: 2222, web: 8080 })
   const [activeTab, setActiveTab] = useState<'all' | 'ssh' | 'web' | 'vault'>('all')
@@ -236,7 +237,7 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
     }
   }, [])
 
-  if (activeMod !== 'bento' && activeMod !== 'elum') return null
+  if (activeMod !== 'bento' && activeMod !== 'optics' && activeMod !== 'elum') return null
 
   // Toggle Honeypot Daemon
   const handleToggleDaemon = async (): Promise<void> => {
@@ -256,7 +257,7 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
   // Trigger Simulated Attack Demo via Backend API
   const handleSimulateAttack = async (): Promise<void> => {
     setSimulating(true)
-    fetch(`${API_BASE}/honeypot/simulate-attack`, { method: 'POST' }).catch(() => {})
+    fetch(`${API_BASE}/honeypot/simulate-attack`, { method: 'POST' }).catch(() => { })
     setTimeout(() => {
       setSimulating(false)
     }, 400)
@@ -330,8 +331,8 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
   const activeAttackerLogs = Object.values(uniqueAttackerLogsMap)
 
   return (
-    <div className="flex-1 flex flex-col bg-slate-950 text-slate-100 font-sans h-full w-full relative overflow-hidden select-none">
-      {/* Background Decorative Grid */}
+    <div className="flex-1 flex flex-col bg-slate-950 text-slate-200 h-full w-full overflow-y-auto relative select-none">
+      {/* BACKGROUND DECORATIVE GRID */}
       <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] opacity-30 pointer-events-none"></div>
 
       {/* TOP HEADER TOOLBAR */}
@@ -342,7 +343,7 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <h1 className="text-xl font-bold tracking-wider text-slate-100 font-mono">elumPot</h1>
+              <h1 className="text-xl font-bold tracking-wider text-slate-100 font-mono">optics</h1>
               <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-semibold border border-amber-500/40">
                 Module 4
               </span>
@@ -358,16 +359,14 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
           {/* Always-On Status Toggle */}
           <button
             onClick={handleToggleDaemon}
-            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-              daemonActive
+            className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${daemonActive
                 ? 'bg-emerald-950/80 border-emerald-500/40 text-emerald-300 shadow-sm shadow-emerald-900/50'
                 : 'bg-rose-950/80 border-rose-500/40 text-rose-300'
-            }`}
+              }`}
           >
             <span
-              className={`w-2 h-2 rounded-full ${
-                daemonActive ? 'bg-emerald-400 animate-ping' : 'bg-rose-500'
-              }`}
+              className={`w-2 h-2 rounded-full ${daemonActive ? 'bg-emerald-400 animate-ping' : 'bg-rose-500'
+                }`}
             ></span>
             <span>{daemonActive ? 'Daemon: Active' : 'Daemon: Stopped'}</span>
           </button>
@@ -515,15 +514,14 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
                         </span>
                       </div>
                       <span
-                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${
-                          is200
+                        className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded border ${is200
                             ? 'bg-emerald-950 text-emerald-400 border-emerald-800'
                             : is403
                               ? 'bg-rose-950 text-rose-400 border-rose-800'
                               : is401
                                 ? 'bg-purple-950 text-purple-400 border-purple-800'
                                 : 'bg-amber-950 text-amber-400 border-amber-800'
-                        }`}
+                          }`}
                       >
                         {trace.statusText}
                       </span>
@@ -693,31 +691,28 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
               <div className="flex items-center space-x-1 bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs">
                 <button
                   onClick={() => setActiveTab('all')}
-                  className={`px-2.5 py-1 rounded-md transition-all font-mono ${
-                    activeTab === 'all'
+                  className={`px-2.5 py-1 rounded-md transition-all font-mono ${activeTab === 'all'
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold'
                       : 'text-slate-400 hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   All ({logs.length})
                 </button>
                 <button
                   onClick={() => setActiveTab('ssh')}
-                  className={`px-2.5 py-1 rounded-md transition-all font-mono ${
-                    activeTab === 'ssh'
+                  className={`px-2.5 py-1 rounded-md transition-all font-mono ${activeTab === 'ssh'
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold'
                       : 'text-slate-400 hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   SSH (2222)
                 </button>
                 <button
                   onClick={() => setActiveTab('web')}
-                  className={`px-2.5 py-1 rounded-md transition-all font-mono ${
-                    activeTab === 'web'
+                  className={`px-2.5 py-1 rounded-md transition-all font-mono ${activeTab === 'web'
                       ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold'
                       : 'text-slate-400 hover:text-slate-200'
-                  }`}
+                    }`}
                 >
                   Web (8080)
                 </button>
@@ -741,21 +736,19 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
                   return (
                     <div
                       key={log.id}
-                      className={`p-4 rounded-xl border transition-all ${
-                        isBlocked
+                      className={`p-4 rounded-xl border transition-all ${isBlocked
                           ? 'bg-rose-950/20 border-rose-900/40 opacity-75'
                           : 'bg-slate-950 border-slate-800 hover:border-slate-700'
-                      }`}
+                        }`}
                     >
                       {/* Log Card Header */}
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <div className="flex items-center space-x-2">
                           <span
-                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${
-                              log.service.includes('SSH')
+                            className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${log.service.includes('SSH')
                                 ? 'bg-amber-950 text-amber-300 border-amber-800'
                                 : 'bg-cyan-950 text-cyan-300 border-cyan-800'
-                            }`}
+                              }`}
                           >
                             {log.service}
                           </span>
@@ -878,3 +871,5 @@ export const ElumPotModule: React.FC<ElumPotModuleProps> = ({ activeMod }) => {
     </div>
   )
 }
+
+export const ElumPotModule = OpticsModule

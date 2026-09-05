@@ -78,7 +78,8 @@ def run_nmap_scan(target: str = "127.0.0.1") -> List[Dict[str, Any]]:
                         if state is not None and state.get('state') == 'open':
                             port_id = port.get('portid')
                             service = port.find('service')
-                            service_name = service.get('name') if service is not None else 'unknown'
+                            service_name = service.get(
+                                'name') if service is not None else 'unknown'
 
                             severity = "Low"
                             if service_name in ['telnet', 'ftp']:
@@ -328,7 +329,8 @@ def run_clamav_scan(target_dir: Optional[str] = None) -> List[Dict[str, Any]]:
     import tempfile
     findings = []
     home_dir = os.path.expanduser("~")
-    target_paths = [home_dir, tempfile.gettempdir()] if not target_dir else [target_dir]
+    target_paths = [home_dir, tempfile.gettempdir()] if not target_dir else [
+        target_dir]
 
     try:
         # Run clamscan recursively with exclusion for large cache/build folders
@@ -353,8 +355,10 @@ def run_clamav_scan(target_dir: Optional[str] = None) -> List[Dict[str, Any]]:
         for line in result.stdout.splitlines():
             if "FOUND" in line:
                 parts = line.split(":")
-                file_path = parts[0].strip() if len(parts) > 0 else "infected_file"
-                virus_name = parts[1].replace("FOUND", "").strip() if len(parts) > 1 else "Malware.Signature"
+                file_path = parts[0].strip() if len(
+                    parts) > 0 else "infected_file"
+                virus_name = parts[1].replace("FOUND", "").strip() if len(
+                    parts) > 1 else "Malware.Signature"
 
                 findings.append({
                     "id": f"clamav-{abs(hash(file_path))}",
@@ -371,7 +375,8 @@ def run_clamav_scan(target_dir: Optional[str] = None) -> List[Dict[str, Any]]:
 
         for scan_root in target_paths:
             for root, dirs, files in os.walk(scan_root):
-                dirs[:] = [d for d in dirs if not d.startswith('.') and d not in ['node_modules', 'venv', 'cache', '.cache']]
+                dirs[:] = [d for d in dirs if not d.startswith(
+                    '.') and d not in ['node_modules', 'venv', 'cache', '.cache']]
                 for fname in files:
                     full_p = os.path.join(root, fname)
                     try:
@@ -404,7 +409,7 @@ def _build_grounded_fallback_report(findings: List[Dict[str, Any]], reason: str)
     status = "LOCKDOWN RECOMMENDED" if high_count else "REVIEW REQUIRED" if findings else "NO FINDINGS"
 
     lines = [
-        "## NO-ASH Avanger Security Audit Report",
+        "## VOID Quark Audit Report",
         "",
         f"**Status:** {status}",
         f"**Platform:** {platform_name}",
@@ -417,9 +422,10 @@ def _build_grounded_fallback_report(findings: List[Dict[str, Any]], reason: str)
     else:
         for index, finding in enumerate(findings, 1):
             severity = finding.get("severity", "Unknown")
-            tool = finding.get("tool", "Avanger")
+            tool = finding.get("tool", "Quark")
             issue = finding.get("issue", "Unspecified finding")
-            fix = finding.get("fix") or "No automatic remediation was provided. Review the affected asset manually."
+            fix = finding.get(
+                "fix") or "No automatic remediation was provided. Review the affected asset manually."
             details = finding.get("details") or {}
             lines.extend([
                 f"{index}. **[{severity}] {issue}**",
@@ -427,7 +433,8 @@ def _build_grounded_fallback_report(findings: List[Dict[str, Any]], reason: str)
                 f"   - Remediation: `{fix}`",
             ])
             if details:
-                detail_text = ", ".join(f"{key}={value}" for key, value in details.items())
+                detail_text = ", ".join(
+                    f"{key}={value}" for key, value in details.items())
                 lines.append(f"   - Evidence: {detail_text}")
 
     lines.extend([
@@ -439,9 +446,9 @@ def _build_grounded_fallback_report(findings: List[Dict[str, Any]], reason: str)
     ])
     return {
         "status": "fallback",
-        "title": "NO-ASH GROUNDED AUDIT REPORT",
+        "title": "VOID GROUNDED AUDIT REPORT",
         "summary": f"Structured report generated from {len(findings)} current finding(s). {reason}",
-        "report_text": "\\n".join(lines),
+        "report_text": "\n".join(lines),
         "findings": findings,
         "severity_counts": counts,
         "platform": platform_name,
@@ -449,7 +456,7 @@ def _build_grounded_fallback_report(findings: List[Dict[str, Any]], reason: str)
 
 
 def generate_ai_report(findings: List[Dict[str, Any]]) -> Dict[str, Any]:
-    """Generate an Avanger report, grounding all fallback output in current findings."""
+    """Generate a Quark report, grounding all fallback output in current findings."""
     api_key = os.getenv("GEMINI_API_KEY")
 
     if not api_key or not HAS_GENAI:
@@ -461,7 +468,7 @@ def generate_ai_report(findings: List[Dict[str, Any]]) -> Dict[str, Any]:
     try:
         client = genai.Client(api_key=api_key)
         prompt = (
-            "You are SuperForge, an expert cybersecurity AI assistant inside NO-ASH Studio. "
+            "You are Lumen, an expert cybersecurity AI assistant inside VOID. "
             "Analyze only the supplied vulnerability findings and generate a clear, executive-friendly report. "
             "Do not invent paths, PIDs, assets, severities, or remediation states.\n\n"
             f"SCAN FINDINGS: {findings}\n\n"
@@ -477,8 +484,8 @@ def generate_ai_report(findings: List[Dict[str, Any]]) -> Dict[str, Any]:
 
         return {
             "status": "success",
-            "title": "SUPERFORGE AI AUDIT REPORT",
-            "summary": "Report generated dynamically by SuperForge AI (Google Gemini API).",
+            "title": "LUMEN AUDIT REPORT",
+            "summary": "Report generated dynamically by Lumen (Google Gemini API).",
             "report_text": response.text,
             "findings": findings,
         }
@@ -486,7 +493,7 @@ def generate_ai_report(findings: List[Dict[str, Any]]) -> Dict[str, Any]:
         print(f"[ScannerService] Gemini API error: {e}")
         return _build_grounded_fallback_report(
             findings,
-            f"SuperForge AI was unavailable ({type(e).__name__}); a deterministic report was returned.",
+            f"Lumen was unavailable ({type(e).__name__}); a deterministic report was returned.",
         )
 
 

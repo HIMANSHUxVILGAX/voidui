@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { Header } from './components/layout/Header'
 import { WorkstationNav } from './components/layout/WorkstationNav'
 import { LandingModule } from './modules/landing/LandingModule'
-import { AshCodeModule } from './modules/ash-code/AshCodeModule'
-import { SuperForgeModule } from './modules/super-forge/SuperForgeModule'
-import { AvangerModule } from './modules/avanger/AvangerModule'
-import { ElumPotModule } from './modules/elum-pot/ElumPotModule'
-import { AshFinderModule } from './modules/ash-finder/AshFinderModule'
+import { DcsModule } from './modules/ash-code/AshCodeModule'
+import { LumenModule } from './modules/super-forge/SuperForgeModule'
+import { QuarkModule } from './modules/avanger/AvangerModule'
+import { OpticsModule } from './modules/elum-pot/ElumPotModule'
+import { MagModule } from './modules/ash-finder/AshFinderModule'
 import { CommandPalette } from './components/modals/CommandPalette'
 import { DependencySetupModal } from './components/modals/DependencySetupModal'
 import { GlobalIntrusionModal, GlobalIntrusionLog } from './components/modals/GlobalIntrusionModal'
@@ -180,7 +180,7 @@ function App(): React.JSX.Element {
     } catch (err) {
       console.error('Error allowing IP:', err)
     } finally {
-      setActiveMod('bento') // Automatically switch tab to elumPot Deception Control Room!
+      setActiveMod('bento') // Automatically switch tab to optics Deception Control Room!
       setGlobalAlertLog(null)
     }
   }
@@ -213,10 +213,10 @@ function App(): React.JSX.Element {
           if (userHome) {
             const separator = userHome.includes('\\') ? '\\' : '/'
             if (!localStorage.getItem('noash-scan-report-folder')) {
-              setScanReportFolder(`${userHome}${separator}Desktop${separator}NoAsh${separator}reports`)
+              setScanReportFolder(`${userHome}${separator}Desktop${separator}Void${separator}reports`)
             }
             if (!localStorage.getItem('noash-custom-scope-folder')) {
-              setCustomScopeFolder(`${userHome}${separator}Desktop${separator}NoAsh`)
+              setCustomScopeFolder(`${userHome}${separator}Desktop${separator}Void`)
             }
           }
         })
@@ -367,7 +367,7 @@ function App(): React.JSX.Element {
               </div>
 
               <p className="text-xs leading-relaxed text-[#8b9094] font-sans">
-                Welcome to <strong className="text-white">VØID Studio Workspace</strong>. To protect your host environment from malicious binaries and memory corruption, this system includes the <strong className="text-[#c89b3c]">Avanger Threat Defense & Sandbox Protocol</strong>.
+                Welcome to <strong className="text-white">VØID Studio Workspace</strong>. To protect your host environment from malicious binaries and memory corruption, this system includes the <strong className="text-[#c89b3c]">quark Threat Defense & Sandbox Protocol</strong>.
               </p>
 
               <div className="bg-black/50 border border-white/10 p-3.5 rounded-xl text-[11px] leading-relaxed space-y-2 font-sans">
@@ -417,15 +417,15 @@ function App(): React.JSX.Element {
               activeMod === 'front' && !lockdown ? 'hidden' : 'flex'
             } flex-1 bg-black flex-col min-w-0 overflow-hidden relative`}
           >
-            {/* Module 1: ashCode */}
-            {(!lockdown && (activeMod === 'nodes' || activeMod === 'code')) && <AshCodeModule activeMod={activeMod} />}
+            {/* Module 1: DCS */}
+            {(!lockdown && (activeMod === 'nodes' || activeMod === 'code' || activeMod === 'dcs')) && <DcsModule activeMod={activeMod} />}
 
-            {/* Module 2: SuperForge Config Console */}
-            {(!lockdown && (activeMod === 'ide' || activeMod === 'forge')) && <SuperForgeModule activeMod={activeMod} />}
+            {/* Module 2: lumen */}
+            {(!lockdown && (activeMod === 'ide' || activeMod === 'forge' || activeMod === 'lumen' || activeMod === 'superforge')) && <LumenModule activeMod={activeMod} />}
 
-            {/* Module 3: Avanger Scanner Lockdown */}
-            {(activeMod === 'timeline' || lockdown) && (
-              <AvangerModule
+            {/* Module 3: quark */}
+            {(activeMod === 'timeline' || activeMod === 'quark' || activeMod === 'avanger' || lockdown) && (
+              <QuarkModule
                 activeMod={activeMod}
                 lockdown={lockdown}
                 setLockdown={setLockdown}
@@ -436,11 +436,11 @@ function App(): React.JSX.Element {
               />
             )}
 
-            {/* Module 4: elumPot Deception System */}
-            {(!lockdown && (activeMod === 'bento' || activeMod === 'elum')) && <ElumPotModule activeMod={activeMod} />}
+            {/* Module 4: optics */}
+            {(!lockdown && (activeMod === 'bento' || activeMod === 'optics' || activeMod === 'elum')) && <OpticsModule activeMod={activeMod} />}
 
-            {/* Module 5: AshFinder Career Roadmap */}
-            {(!lockdown && activeMod === 'settings') && <AshFinderModule activeMod={activeMod} />}
+            {/* Module 5: MAG */}
+            {(!lockdown && (activeMod === 'settings' || activeMod === 'finder' || activeMod === 'mag')) && <MagModule activeMod={activeMod} />}
           </main>
 
           {/* Front / Landing Page View */}

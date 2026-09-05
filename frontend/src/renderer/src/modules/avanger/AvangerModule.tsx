@@ -17,7 +17,7 @@ interface Finding {
   }
 }
 
-interface AvangerModuleProps {
+export interface QuarkModuleProps {
   activeMod: string
   lockdown: boolean
   setLockdown: (val: boolean) => void
@@ -26,6 +26,7 @@ interface AvangerModuleProps {
   customScopeFolder?: string
   setCustomScopeFolder?: (val: string) => void
 }
+export type AvangerModuleProps = QuarkModuleProps
 
 interface ChatMessage {
   sender: 'user' | 'ai'
@@ -42,7 +43,7 @@ interface AiReportData {
 // Module-level constant (Prevents TDZ ReferenceError on mount)
 const API_BASE = 'http://127.0.0.1:8000/api'
 
-export const AvangerModule: React.FC<AvangerModuleProps> = ({
+export const QuarkModule: React.FC<QuarkModuleProps> = ({
   activeMod,
   lockdown,
   setLockdown,
@@ -60,7 +61,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
   })
   const [terminalInput, setTerminalInput] = useState('')
   const [terminalLogs, setTerminalLogs] = useState<string[]>([
-    'NO-ASH Avanger Secure Shell v1.0.0',
+    'VOID Quark Secure Shell v1.0.0',
     'Type "help" to see available commands.'
   ])
   const terminalInputRef = useRef<HTMLInputElement>(null)
@@ -76,12 +77,12 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
   const [audioMuted, setAudioMuted] = useState(false)
   const [connectionError, setConnectionError] = useState<string | null>(null)
 
-  // SuperForge Chat State inside Lockdown
+  // Lumen Chat State inside Lockdown
   const [aiInput, setAiInput] = useState('')
   const [aiMessages, setAiMessages] = useState<ChatMessage[]>([
     {
       sender: 'ai',
-      text: 'Hello! I am SuperForge. I see your system is locked down due to high-risk malware. I have full read access to the scanner logs. How can I help you remediate this threat?'
+      text: 'Hello! I am lumen. I see your system is locked down due to high-risk malware. I have full read access to the scanner logs. How can I help you remediate this threat?'
     }
   ])
 
@@ -146,7 +147,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
     }
   }, [])
 
-  // Bi-directional sync: when user changes scope on Avanger page, update Settings localStorage
+  // Bi-directional sync: when user changes scope on quark page, update Settings localStorage
   useEffect(() => {
     localStorage.setItem('noash-system-access-level', scanScope)
   }, [scanScope])
@@ -508,7 +509,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
   const [isAiLoading, setIsAiLoading] = useState(false)
   const [refusalCount, setRefusalCount] = useState<number>(0)
 
-  // AI chat submission handler - Connected to real backend SuperForge API with Strict Scope Boundary
+  // AI chat submission handler - Connected to real backend Lumen API with Strict Scope Boundary
   const handleAiSubmit = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault()
     const query = aiInput.trim()
@@ -526,8 +527,13 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
       lowerQuery.includes('coding') ||
       lowerQuery.includes('program') ||
       lowerQuery.includes('ashcode') ||
+      lowerQuery.includes('dcs') ||
+      lowerQuery.includes("developer's colabrative space") ||
       lowerQuery.includes('elumpot') ||
+      lowerQuery.includes('optics') ||
       lowerQuery.includes('ashfinder') ||
+      lowerQuery.includes('mag') ||
+      lowerQuery.includes('mantor and guide') ||
       lowerQuery.includes('javascript') ||
       lowerQuery.includes('python') ||
       lowerQuery.includes('react') ||
@@ -557,7 +563,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
       const remainingInfectedFiles = highRiskFiles.filter((f) => !deletedFiles.includes(f))
       const contextMessage = `[System Context: Total Flagged Infected Files: ${highRiskFiles.join(', ') || 'None'} | User Successfully Deleted Files: ${deletedFiles.join(', ') || 'None'} | Remaining Active Threats: ${remainingInfectedFiles.join(', ') || 'NONE (All infected files deleted)'} | High Risk Process PID: ${highRiskPid || 'None'} | Process Terminated: ${lockdownChecklist.killMalicious} | Lockdown Active: ${lockdown}]\n\nUser Question: ${query}`
 
-      const res = await fetch(`${API_BASE}/superforge/chat`, {
+      const res = await fetch(`${API_BASE}/lumen/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -579,7 +585,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
         ...prev,
         {
           sender: 'ai',
-          text: `Could not connect to SuperForge backend (${errMsg}). Ensure backend server is running on port 8000!`
+          text: `Could not connect to lumen backend (${errMsg}). Ensure backend server is running on port 8000!`
         }
       ])
     } finally {
@@ -603,7 +609,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
     }
   }
 
-  if (activeMod !== 'timeline' && !lockdown) return null
+  if (activeMod !== 'timeline' && activeMod !== 'quark' && activeMod !== 'avanger' && !lockdown) return null
 
   return (
     <div className="flex-1 flex flex-col bg-zinc-950 font-mono text-zinc-300 h-full w-full relative p-6 overflow-y-auto">
@@ -615,7 +621,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
             <div className="flex items-center space-x-3 text-red-500">
               <Lock className="w-5 h-5" />
               <div className="ml-2">
-                <h2 className="text-xl sm:text-2xl font-bold tracking-widest">AVANGER LOCKDOWN MODE</h2>
+                <h2 className="text-xl sm:text-2xl font-bold tracking-widest">QUARK LOCKDOWN MODE</h2>
                 <p className="text-sm text-red-400 font-medium">
                   High severity vulnerabilities must be fixed to unlock application access.
                 </p>
@@ -629,7 +635,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
             </button>
           </div>
 
-          {/* Split Screen Dashboard (Three Columns: Checklist, Console, SuperForge) */}
+          {/* Split Screen Dashboard (Three Columns: Checklist, Console, Lumen) */}
           <div className="flex-1 flex flex-col md:flex-row gap-4 min-h-0">
             {/* Column 1: Left Hand Checklist */}
             <div className="w-full md:w-1/4 bg-zinc-900 border border-red-500/20 rounded p-4 flex flex-col shrink-0">
@@ -715,7 +721,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
                   <Terminal className="w-4 h-4 text-red-500" />
                   <span className="font-bold text-red-500">Elevated SecOps Admin Shell</span>
                 </div>
-                <span className="text-zinc-500">user@noash-sandbox:~$</span>
+                <span className="text-zinc-500">user@void-sandbox:~$</span>
               </div>
 
               {/* Logs output */}
@@ -745,12 +751,12 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
               </form>
             </div>
 
-            {/* Column 3: Right SuperForge AI Assistant */}
+            {/* Column 3: Right Lumen AI Assistant */}
             <div className="w-full md:w-1/3 bg-zinc-900 border border-studio-yellow/20 rounded flex flex-col min-h-0 font-mono">
               <div className="bg-zinc-950 border-b border-zinc-800 px-3.5 py-2 flex items-center justify-between text-xs text-studio-yellow">
                 <div className="flex items-center space-x-2">
                   <span className="w-2 h-2 rounded-full bg-studio-yellow animate-pulse shrink-0"></span>
-                  <span className="font-bold">SuperForge Security Advisor</span>
+                  <span className="font-bold">lumen</span>
                 </div>
                 <span className="text-zinc-500 text-[11px]">AI ASSISTANT</span>
               </div>
@@ -765,7 +771,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
                       className={`flex flex-col space-y-1 ${isAi ? 'items-start' : 'items-end'}`}
                     >
                       <span className="text-[11px] text-zinc-400 uppercase tracking-wider font-mono">
-                        {isAi ? 'SuperForge' : 'User'}
+                        {isAi ? 'lumen' : 'User'}
                       </span>
                       <div
                         className={`p-3 rounded-lg max-w-[92%] leading-relaxed ${
@@ -783,7 +789,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
                 })}
                 {isAiLoading && (
                   <div className="flex flex-col items-start space-y-1">
-                    <span className="text-[11px] text-zinc-400 uppercase tracking-wider font-mono">SuperForge</span>
+                    <span className="text-[11px] text-zinc-400 uppercase tracking-wider font-mono">lumen</span>
                     <div className="p-3 bg-zinc-950 text-studio-yellow border border-studio-yellow/30 rounded text-xs sm:text-sm animate-pulse font-mono">
                       Analyzing threat & generating security response...
                     </div>
@@ -802,7 +808,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
                   disabled={isAiLoading}
                   onChange={(e) => setAiInput(e.target.value)}
                   className="flex-1 bg-transparent border-0 outline-none text-white text-xs sm:text-sm font-mono px-1 disabled:opacity-50"
-                  placeholder={isAiLoading ? 'SuperForge is processing...' : "Ask SuperForge (e.g. 'how to kill process')..."}
+                  placeholder={isAiLoading ? 'lumen is processing...' : "Ask lumen (e.g. 'how to kill process')..."}
                 />
                 <button
                   type="submit"
@@ -817,10 +823,10 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
         </div>
       )}
 
-      {/* ----------------- STANDARD AVANGER SCREEN VIEW ----------------- */}
+      {/* ----------------- STANDARD QUARK SCREEN VIEW ----------------- */}
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-zinc-800 pb-4 mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-wider text-white">AVANGER SCANNER</h1>
+          <h1 className="text-2xl font-bold tracking-wider text-white">QUARK</h1>
           <p className="text-xs text-zinc-500">
             System vulnerability audit & threat verification scanner
           </p>
@@ -1185,7 +1191,7 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
             <div className="bg-zinc-900 border border-studio-yellow/30 rounded-lg p-4 font-mono space-y-2">
               <div className="flex items-center justify-between border-b border-zinc-800 pb-2">
                 <span className="text-xs font-bold text-studio-yellow uppercase tracking-wider">
-                  {aiReport.title || 'SuperForge AI Report'}
+                  {aiReport.title || 'lumen Report'}
                 </span>
                 <span className="text-[10px] text-zinc-500">{(aiReport.status || 'COMPLETED').toUpperCase()}</span>
               </div>
@@ -1308,3 +1314,5 @@ export const AvangerModule: React.FC<AvangerModuleProps> = ({
     </div>
   )
 }
+
+export const AvangerModule = QuarkModule

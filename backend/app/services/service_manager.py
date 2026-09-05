@@ -4,14 +4,16 @@ import platform
 import subprocess
 from typing import Dict, Any
 
+
 class NativeOSServiceManager:
-    """Enterprise Native OS Service Manager for NO-ASH Deception System.
+    """Enterprise Native OS Service Manager for VOID Deception System.
     Provides zero-script native service installation for Windows SCM & Linux Systemd.
     """
+
     def __init__(self):
         self.os_type = platform.system()
-        self.service_name = "NoAshDeception"
-        self.display_name = "NO-ASH Enterprise Deception System Daemon"
+        self.service_name = "VoidDeception"
+        self.display_name = "VOID Deception Daemon"
         self.description = "Always-On Honeypot & Deception System Daemon for Port 2222 (SSH) and Port 8080 (Web)."
 
     def get_service_status(self) -> Dict[str, Any]:
@@ -72,10 +74,14 @@ WantedBy=multi-user.target
                     f.write(service_content)
 
                 # Move service file and reload systemd
-                subprocess.run(f"sudo cp {service_file} /etc/systemd/system/{self.service_name}.service", shell=True, check=True)
-                subprocess.run("sudo systemctl daemon-reload", shell=True, check=True)
-                subprocess.run(f"sudo systemctl enable {self.service_name}", shell=True, check=True)
-                subprocess.run(f"sudo systemctl start {self.service_name}", shell=True, check=True)
+                subprocess.run(
+                    f"sudo cp {service_file} /etc/systemd/system/{self.service_name}.service", shell=True, check=True)
+                subprocess.run("sudo systemctl daemon-reload",
+                               shell=True, check=True)
+                subprocess.run(
+                    f"sudo systemctl enable {self.service_name}", shell=True, check=True)
+                subprocess.run(
+                    f"sudo systemctl start {self.service_name}", shell=True, check=True)
 
                 return {
                     "status": "success",
@@ -87,9 +93,11 @@ WantedBy=multi-user.target
                     f'sc create {self.service_name} binPath= "{binary_path}" '
                     f'DisplayName= "{self.display_name}" start= auto'
                 )
-                res = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+                res = subprocess.run(
+                    cmd, shell=True, capture_output=True, text=True)
                 if res.returncode == 0:
-                    subprocess.run(f"sc start {self.service_name}", shell=True, capture_output=True)
+                    subprocess.run(
+                        f"sc start {self.service_name}", shell=True, capture_output=True)
                     return {
                         "status": "success",
                         "message": "Windows Service Control Manager service registered successfully.",
@@ -106,9 +114,12 @@ WantedBy=multi-user.target
         """Removes native OS service."""
         try:
             if self.os_type == "Linux":
-                subprocess.run(f"sudo systemctl stop {self.service_name}", shell=True)
-                subprocess.run(f"sudo systemctl disable {self.service_name}", shell=True)
-                subprocess.run(f"sudo rm -f /etc/systemd/system/{self.service_name}.service", shell=True)
+                subprocess.run(
+                    f"sudo systemctl stop {self.service_name}", shell=True)
+                subprocess.run(
+                    f"sudo systemctl disable {self.service_name}", shell=True)
+                subprocess.run(
+                    f"sudo rm -f /etc/systemd/system/{self.service_name}.service", shell=True)
                 subprocess.run("sudo systemctl daemon-reload", shell=True)
                 return {"status": "success", "message": "Linux Systemd service removed."}
             elif self.os_type == "Windows":
@@ -118,5 +129,6 @@ WantedBy=multi-user.target
         except Exception as e:
             return {"status": "error", "message": str(e)}
         return {"status": "error", "message": "Unsupported OS"}
+
 
 native_service_manager = NativeOSServiceManager()

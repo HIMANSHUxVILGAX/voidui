@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Bot, User, Cpu, Globe, Zap, Send, Shield, Terminal, Code, Lock, Sparkles, ChevronDown, ChevronUp, Mic, Plus, Server } from 'lucide-react'
 
-interface SuperForgeModuleProps {
+export interface LumenModuleProps {
   activeMod: string
 }
+export type SuperForgeModuleProps = LumenModuleProps
 
 interface ChatMessage {
   id: string
@@ -18,7 +19,7 @@ const PERSONA_LABELS: Record<string, { name: string; icon: any; color: string }>
   security_consultant: { name: 'Security Consultant', icon: Shield, color: 'text-yellow-400 border-yellow-500/40 bg-yellow-500/10' },
   system_hardening: { name: 'System Hardening Advisor', icon: Lock, color: 'text-cyan-400 border-cyan-500/40 bg-cyan-500/10' },
   decoy_analyst: { name: 'Decoy Analyst', icon: Terminal, color: 'text-purple-400 border-purple-500/40 bg-purple-500/10' },
-  code_auditor: { name: 'ashCode Auditor', icon: Code, color: 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' },
+  code_auditor: { name: 'aegis', icon: Code, color: 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10' },
   roadmap_advisor: { name: 'Roadmap Coach', icon: Sparkles, color: 'text-blue-400 border-blue-500/40 bg-blue-500/10' }
 }
 
@@ -29,14 +30,14 @@ const ENGINE_OPTIONS = [
   { id: 'auto', name: 'Smart Auto Failover (Cloud → Free Pool → Local)', icon: Zap, badge: 'Smart', color: 'text-yellow-400' }
 ]
 
-export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod }) => {
-  if (activeMod !== 'ide' && activeMod !== 'forge' && activeMod !== 'nodes' && activeMod !== 'code') return null
+export const LumenModule: React.FC<LumenModuleProps> = ({ activeMod }) => {
+  if (activeMod !== 'ide' && activeMod !== 'lumen' && activeMod !== 'superforge' && activeMod !== 'forge' && activeMod !== 'nodes' && activeMod !== 'code' && activeMod !== 'dcs') return null
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Welcome to SuperForge AI (ashCode). I am standing by to assist with security audits, system hardening, and threat response.",
+      text: "Welcome to lumen. I am standing by to assist with security audits, system hardening, and threat response.",
       provider: 'system',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
@@ -83,7 +84,7 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
     setIsLoading(true)
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/superforge/chat', {
+      const response = await fetch('http://127.0.0.1:8000/api/lumen/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -135,7 +136,7 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
             <Sparkles className="w-4 h-4" />
           </div>
           <span className="font-extrabold text-sm tracking-wider text-white font-mono">
-            VØID <span className="text-[#c89b3c]">{'//'}</span> SUPERFORGE AI ENGINE
+            VØID <span className="text-[#c89b3c]">{'//'}</span> LUMEN
           </span>
           <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 font-mono font-bold">
             NEURAL CORE ONLINE
@@ -153,11 +154,10 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
             <button
               key={id}
               onClick={() => setSelectedPersona(id)}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border text-xs font-sans transition-all ${
-                isSelected
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border text-xs font-sans transition-all ${isSelected
                   ? meta.color + ' font-semibold shadow-sm'
                   : 'border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200 bg-[#1a1a1e]'
-              }`}
+                }`}
             >
               <IconComponent className="w-3.5 h-3.5" />
               <span>{meta.name}</span>
@@ -176,36 +176,34 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
               className={`flex items-start space-x-3 ${isUser ? 'flex-row-reverse space-x-reverse' : ''}`}
             >
               <div
-                className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${
-                  isUser
+                className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${isUser
                     ? 'bg-blue-600/20 text-blue-400 border border-blue-500/40'
                     : 'bg-cyan-600/20 text-cyan-400 border border-cyan-500/40'
-                }`}
+                  }`}
               >
                 {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
               </div>
 
               <div
-                className={`max-w-[82%] rounded-2xl p-4 border font-sans ${
-                  isUser
+                className={`max-w-[82%] rounded-2xl p-4 border font-sans ${isUser
                     ? 'bg-[#1f293d] border-blue-500/30 text-slate-100'
                     : 'bg-[#18181c] border-slate-800 text-slate-200 shadow-xl'
-                }`}
+                  }`}
               >
                 {!isUser && (
                   <div className="flex items-center justify-between mb-2 text-[11px] text-slate-400 border-b border-slate-800 pb-1.5">
                     <span className="font-bold text-cyan-400 uppercase tracking-wide font-mono">
-                      SUPERFORGE AI
+                      LUMEN
                     </span>
                     {msg.provider && (
                       <span className="px-2 py-0.5 rounded bg-slate-900 text-slate-300 font-mono text-[10px] border border-slate-700">
                         {msg.provider === 'local_qwen'
                           ? 'Qwen 2.5 (Local)'
                           : msg.provider === 'gemini'
-                          ? 'Gemini 3.6 (Cloud)'
-                          : msg.provider === 'free_pool'
-                          ? 'Free LLM Pool'
-                          : msg.provider}
+                            ? 'Gemini 3.6 (Cloud)'
+                            : msg.provider === 'free_pool'
+                              ? 'Free LLM Pool'
+                              : msg.provider}
                       </span>
                     )}
                   </div>
@@ -237,7 +235,7 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
       {/* Floating Pill Chat Input Area (Matching User Screenshot) */}
       <div className="p-4 bg-[#0f0f11] z-20">
         <div className="max-w-4xl mx-auto bg-[#1c1c21] border border-slate-800/90 rounded-[22px] shadow-2xl overflow-visible relative transition-all focus-within:border-slate-700">
-          
+
           {/* Top Status/Task Bar Banner (Collapsible like in screenshot) */}
           <div className="px-4 py-2 border-b border-slate-800/70 flex items-center justify-between text-xs text-slate-400 font-sans">
             <div className="flex items-center space-x-2">
@@ -270,14 +268,14 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
                 }
               }}
               rows={2}
-              placeholder={`Ask ashCode SuperForge AI (${PERSONA_LABELS[selectedPersona]?.name || 'Assistant'})...`}
+              placeholder={`Ask lumen (${PERSONA_LABELS[selectedPersona]?.name || 'Assistant'})...`}
               className="w-full bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none text-sm resize-none"
               disabled={isLoading}
             />
 
             {/* Bottom Controls Row inside Input Box */}
             <div className="flex items-center justify-between pt-2 border-t border-slate-800/40 relative">
-              
+
               {/* LLM Engine Dropdown Selector Pill (Matching Screenshot Bottom Left) */}
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -309,9 +307,8 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
                               setSelectedProvider(engine.id)
                               setIsDropdownOpen(false)
                             }}
-                            className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between hover:bg-[#282832] transition-colors font-sans text-xs ${
-                              isSelected ? 'bg-[#282832] font-semibold text-white' : 'text-slate-300'
-                            }`}
+                            className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between hover:bg-[#282832] transition-colors font-sans text-xs ${isSelected ? 'bg-[#282832] font-semibold text-white' : 'text-slate-300'
+                              }`}
                           >
                             <div className="flex items-center space-x-2.5">
                               <Icon className={`w-4 h-4 ${engine.color}`} />
@@ -354,3 +351,5 @@ export const SuperForgeModule: React.FC<SuperForgeModuleProps> = ({ activeMod })
     </div>
   )
 }
+
+export const SuperForgeModule = LumenModule

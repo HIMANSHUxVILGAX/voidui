@@ -96,7 +96,7 @@ const ThreatMap: React.FC<ThreatMapProps> = ({ pins = [] }) => {
       setTimeout(() => {
         try {
           map.invalidateSize()
-        } catch (e) {}
+        } catch (e) { }
       }, 300)
 
       mapInstanceRef.current = map
@@ -108,7 +108,7 @@ const ThreatMap: React.FC<ThreatMapProps> = ({ pins = [] }) => {
       if (mapInstanceRef.current) {
         try {
           mapInstanceRef.current.remove()
-        } catch (e) {}
+        } catch (e) { }
         mapInstanceRef.current = null
       }
     }
@@ -189,7 +189,7 @@ const ThreatMap: React.FC<ThreatMapProps> = ({ pins = [] }) => {
             ${safeSummary}
           </p>
         </div>`,
-        { className: 'elum-theme-popup' }
+        { className: 'optics-theme-popup' }
       )
 
       markersRef.current.push(pulseRing, dot)
@@ -198,11 +198,11 @@ const ThreatMap: React.FC<ThreatMapProps> = ({ pins = [] }) => {
 
   return (
     <div className="relative w-full">
-      <div id="elum-map-container" ref={mapContainerRef} />
+      <div id="optics-map-container" ref={mapContainerRef} />
 
       {/* Clean Slate Theme CSS matching App UI */}
       <style>{`
-        #elum-map-container {
+        #optics-map-container {
           width: 100%;
           height: 350px;
           border-radius: 12px;
@@ -221,14 +221,14 @@ const ThreatMap: React.FC<ThreatMapProps> = ({ pins = [] }) => {
           0%, 100% { opacity: 0.2; transform: scale(1); }
           50% { opacity: 0.6; }
         }
-        .elum-theme-popup .leaflet-popup-content-wrapper {
+        .optics-theme-popup .leaflet-popup-content-wrapper {
           background: rgba(15, 23, 42, 0.95) !important;
           border: 1px solid #334155 !important;
           box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important;
           border-radius: 8px !important;
           color: #e2e8f0 !important;
         }
-        .elum-theme-popup .leaflet-popup-tip {
+        .optics-theme-popup .leaflet-popup-tip {
           background: rgba(15, 23, 42, 0.95) !important;
           border: 1px solid #334155 !important;
         }

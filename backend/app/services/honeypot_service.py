@@ -22,11 +22,13 @@ class HoneypotSession:
     """Stateful Session Context for an attacker IP.
     Provides 100% consistent stateful responses for Windows CMD / PowerShell and Linux Bash environments.
     """
+
     def __init__(self, ip: str, target_os: Optional[str] = None):
         self.ip = ip
         self.created_at = time.time()
-        self.target_os = target_os if target_os else ("windows" if platform.system() == "Windows" else "linux")
-        
+        self.target_os = target_os if target_os else (
+            "windows" if platform.system() == "Windows" else "linux")
+
         if self.target_os == "windows":
             self.username = "administrator"
             self.hostname = f"WIN-SRV-PROD-{(abs(hash(ip)) % 89) + 10}"
@@ -37,7 +39,7 @@ class HoneypotSession:
             self.kernel = "Linux 5.15.0-101-generic #111-Ubuntu SMP x86_64"
             self.uid_str = "uid=0(root) gid=0(root) groups=0(root)"
             self.prompt = f"{self.username}@{self.hostname}:~# "
-            
+
         self.command_history: List[str] = []
         self.cached_ai_decoys: Dict[str, str] = {}
 
@@ -189,7 +191,8 @@ class HoneypotService:
     # --- GEOLOCATION RESOLVER ---
     def resolve_geolocation(self, ip: str) -> Dict[str, Any]:
         """Resolves city, country, and precise lat/lon for an IP address with local TTL caching."""
-        is_local = ip in ("127.0.0.1", "localhost", "::1") or ip.startswith("192.168.") or ip.startswith("10.")
+        is_local = ip in ("127.0.0.1", "localhost", "::1") or ip.startswith(
+            "192.168.") or ip.startswith("10.")
 
         if ip in self.geo_cache and not is_local:
             return self.geo_cache[ip]
@@ -197,7 +200,8 @@ class HoneypotService:
         # 1. Try ipapi.co or ip-api.com for precise public/local ISP geolocation
         try:
             url = "http://ip-api.com/json/?fields=status,country,city,countryCode,lat,lon" if is_local else f"http://ip-api.com/json/{ip}?fields=status,country,city,countryCode,lat,lon"
-            req = urllib.request.Request(url, headers={"User-Agent": "NO-ASH-DeceptionEngine/1.0"})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "VOID-Optics/1.0"})
             with urllib.request.urlopen(req, timeout=3) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 if data.get("status") == "success":
@@ -208,7 +212,8 @@ class HoneypotService:
                     code = data.get("countryCode", "LOCAL")
                     lat = float(data.get("lat", 0.0))
                     lon = float(data.get("lon", 0.0))
-                    geo_info = {"location": f"{city}, {country}", "country_code": code, "lat": lat, "lon": lon}
+                    geo_info = {"location": f"{city}, {country}",
+                                "country_code": code, "lat": lat, "lon": lon}
                     if not is_local:
                         self.geo_cache[ip] = geo_info
                     return geo_info
@@ -218,7 +223,8 @@ class HoneypotService:
         # 2. Secondary API Fallback (ipwhois)
         try:
             url = "https://ipwho.is/" if is_local else f"https://ipwho.is/{ip}"
-            req = urllib.request.Request(url, headers={"User-Agent": "NO-ASH-DeceptionEngine/1.0"})
+            req = urllib.request.Request(
+                url, headers={"User-Agent": "VOID-Optics/1.0"})
             with urllib.request.urlopen(req, timeout=3) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
                 if data.get("success") is True:
@@ -227,7 +233,8 @@ class HoneypotService:
                     code = data.get("country_code", "LOCAL")
                     lat = float(data.get("latitude", 0.0))
                     lon = float(data.get("longitude", 0.0))
-                    geo_info = {"location": f"{city}, {country}", "country_code": code, "lat": lat, "lon": lon}
+                    geo_info = {"location": f"{city}, {country}",
+                                "country_code": code, "lat": lat, "lon": lon}
                     if not is_local:
                         self.geo_cache[ip] = geo_info
                     return geo_info
@@ -245,64 +252,78 @@ class HoneypotService:
         return default_geo
 
     def is_app_running(self) -> bool:
-        """Cross-platform check to verify if NO-ASH Electron UI application is running in RAM."""
+        """Cross-platform check to verify if VOID Electron UI application is running in RAM."""
         try:
             if platform.system() == "Windows":
-                res = subprocess.run(["tasklist", "/FI", "IMAGENAME eq noash-studio.exe"], capture_output=True, text=True)
-                if "noash-studio.exe" in res.stdout:
+                res = subprocess.run(
+                    ["tasklist", "/FI", "IMAGENAME eq void-studio.exe"], capture_output=True, text=True)
+                if "void-studio.exe" in res.stdout or "noash-studio.exe" in res.stdout:
                     return True
-                res_el = subprocess.run(["tasklist", "/FI", "IMAGENAME eq electron.exe"], capture_output=True, text=True)
+                res_el = subprocess.run(
+                    ["tasklist", "/FI", "IMAGENAME eq electron.exe"], capture_output=True, text=True)
                 return "electron.exe" in res_el.stdout
             else:
-                res = subprocess.run(["pgrep", "-f", "noash-studio|out/main/index.js|electron"], capture_output=True, text=True)
+                res = subprocess.run(
+                    ["pgrep", "-f", "void-studio|noash-studio|out/main/index.js|electron"], capture_output=True, text=True)
                 return bool(res.stdout.strip())
         except Exception:
             return False
 
     def restore_and_focus_app(self) -> None:
-        """Auto-launches the NO-ASH Electron UI if it is closed, then raises + focuses its window.
+        """Auto-launches the VOID Electron UI if it is closed, then raises + focuses its window.
         Works 100% cross-platform on Windows 10/11 and Linux (X11/Wayland).
         """
-        WINDOW_TITLE = "NO-ASH Studio"
+        WINDOW_TITLE = "VOID Studio"
         try:
             # 1. Check if the Electron app is running; auto-launch if closed.
             if not self.is_app_running():
-                base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+                base_dir = os.path.dirname(os.path.dirname(
+                    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
                 env = os.environ.copy()
                 if platform.system() == "Windows":
-                    installed_bin = os.path.expandvars(r"%LOCALAPPDATA%\Programs\NO-ASH Studio\NO-ASH Studio.exe")
-                    unpacked_bin = os.path.join(base_dir, "frontend", "dist", "win-unpacked", "noash-studio.exe")
+                    installed_bin = os.path.expandvars(
+                        r"%LOCALAPPDATA%\Programs\VOID Studio\VOID Studio.exe")
+                    unpacked_bin = os.path.join(
+                        base_dir, "frontend", "dist", "win-unpacked", "void-studio.exe")
                     if os.path.exists(installed_bin):
-                        subprocess.Popen([installed_bin], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.Popen(
+                            [installed_bin], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     elif os.path.exists(unpacked_bin):
-                        subprocess.Popen([unpacked_bin], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.Popen(
+                            [unpacked_bin], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     else:
                         frontend_dir = os.path.join(base_dir, "frontend")
-                        subprocess.Popen(["cmd.exe", "/c", "npm run dev"], cwd=frontend_dir, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.Popen(["cmd.exe", "/c", "npm run dev"], cwd=frontend_dir,
+                                         env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 else:
-                    unpacked_bin = os.path.join(base_dir, "frontend", "dist", "linux-unpacked", "noash-studio")
+                    unpacked_bin = os.path.join(
+                        base_dir, "frontend", "dist", "linux-unpacked", "void-studio")
                     if os.path.exists(unpacked_bin):
-                        subprocess.Popen([unpacked_bin], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.Popen(
+                            [unpacked_bin], env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                     else:
                         frontend_dir = os.path.join(base_dir, "frontend")
-                        subprocess.Popen(["npm", "run", "dev"], cwd=frontend_dir, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        subprocess.Popen(["npm", "run", "dev"], cwd=frontend_dir, env=env,
+                                         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 time.sleep(2)
 
             # 2. Raise/focus the window on Windows and Linux
             if platform.system() == "Windows":
                 try:
                     ps_focus = """
-                    $w = Get-Process | Where-Object { $_.MainWindowTitle -match 'NO-ASH' -or $_.ProcessName -match 'NO-ASH' } | Select-Object -First 1
+                    $w = Get-Process | Where-Object { $_.MainWindowTitle -match 'VOID' -or $_.ProcessName -match 'VOID' -or $_.MainWindowTitle -match 'NO-ASH' } | Select-Object -First 1
                     if ($w) { (New-Object -ComObject WScript.Shell).AppActivate($w.Id) }
                     """
-                    subprocess.Popen(["powershell", "-NoProfile", "-Command", ps_focus], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    subprocess.Popen(["powershell", "-NoProfile", "-Command", ps_focus],
+                                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 except Exception:
                     pass
             elif platform.system() == "Linux":
                 raised = False
                 if shutil.which("wmctrl"):
                     try:
-                        r = subprocess.run(["wmctrl", "-a", WINDOW_TITLE], capture_output=True, timeout=5)
+                        r = subprocess.run(
+                            ["wmctrl", "-a", WINDOW_TITLE], capture_output=True, timeout=5)
                         raised = r.returncode == 0
                     except Exception:
                         raised = False
@@ -317,7 +338,8 @@ class HoneypotService:
                     except Exception:
                         pass
         except Exception as err:
-            print(f"[HoneypotService] Error restoring/focusing app window: {err}")
+            print(
+                f"[HoneypotService] Error restoring/focusing app window: {err}")
 
     def trigger_native_os_notification(self, title: str, message: str, ip: Optional[str] = None) -> None:
         """Fires a Native OS Desktop Notification (Linux notify-send / Windows PowerShell toast)
@@ -370,7 +392,7 @@ class HoneypotService:
                     clean_msg = message.replace('"', "'").replace("\n", " ")
                     clean_title = title.replace('"', "'").replace("\n", " ")
                     esc_ip = ip or "127.0.0.1"
-                    
+
                     ps_content = f"""
 [void][System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')
 [void][Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType=WindowsRuntime]
@@ -386,8 +408,8 @@ $xml = @"
     </binding>
   </visual>
   <actions>
-    <action content="BLOCK &amp; BAN IP" arguments="noash://?action=block&amp;ip={esc_ip}" activationType="protocol"/>
-    <action content="VIEW &amp; MANIPULATE" arguments="noash://?action=view&amp;ip={esc_ip}" activationType="protocol"/>
+    <action content="BLOCK &amp; BAN IP" arguments="void://?action=block&amp;ip={esc_ip}" activationType="protocol"/>
+    <action content="VIEW &amp; MANIPULATE" arguments="void://?action=view&amp;ip={esc_ip}" activationType="protocol"/>
   </actions>
 </toast>
 "@
@@ -396,7 +418,7 @@ $toastXml = New-Object Windows.Data.Xml.Dom.XmlDocument
 $toastXml.LoadXml($xml)
 $toast = New-Object Windows.UI.Notifications.ToastNotification $toastXml
 try {{
-    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('com.noash.studio').Show($toast)
+    [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('com.void.studio').Show($toast)
 }} catch {{
     $n = New-Object System.Windows.Forms.NotifyIcon
     $n.Icon = [System.Drawing.SystemIcons]::Shield
@@ -411,17 +433,20 @@ try {{
                         with os.fdopen(fd, "w", encoding="utf-8") as f:
                             f.write(ps_content)
                         subprocess.Popen(
-                            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", temp_path],
+                            ["powershell", "-NoProfile", "-ExecutionPolicy",
+                                "Bypass", "-File", temp_path],
                             stdout=subprocess.DEVNULL,
                             stderr=subprocess.DEVNULL
                         )
+
                         def cleanup_temp(path):
                             time.sleep(3)
                             try:
                                 os.remove(path)
                             except Exception:
                                 pass
-                        threading.Thread(target=cleanup_temp, args=(temp_path,), daemon=True).start()
+                        threading.Thread(target=cleanup_temp, args=(
+                            temp_path,), daemon=True).start()
                     except Exception:
                         pass
             except Exception:
@@ -468,12 +493,13 @@ try {{
                     "temperature": 0.4
                 }).encode("utf-8")
 
-                req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+                req = urllib.request.Request(
+                    url, data=payload, headers=headers, method="POST")
                 with urllib.request.urlopen(req, timeout=2.5) as resp:
                     res_data = json.loads(resp.read().decode("utf-8"))
                     generated_text = res_data["choices"][0]["message"]["content"]
             except Exception as e:
-                print(f"[elumPot] Groq AI error: {e}")
+                print(f"[Optics] Groq AI error: {e}")
 
         # 2. Try Gemini API fallback
         if not generated_text and HAS_GENAI and gemini_key:
@@ -485,11 +511,12 @@ try {{
                 )
                 generated_text = response.text
             except Exception as e:
-                print(f"[elumPot] Gemini AI error: {e}")
+                print(f"[Optics] Gemini AI error: {e}")
 
         # 3. Dynamic Structural Schema Fallback (No static hardcoded text)
         if not generated_text:
-            ext = file_path.split(".")[-1].lower() if "." in file_path else "txt"
+            ext = file_path.split(
+                ".")[-1].lower() if "." in file_path else "txt"
             h_val = abs(hash(file_path + client_ip)) % 8999 + 1000
 
             if "sql" in ext or "db" in file_path:
@@ -500,7 +527,7 @@ try {{
                 )
             elif "env" in ext or "env" in file_path:
                 generated_text = (
-                    f"# NO-ASH Dynamic Synthetic Decoy Configuration #{h_val}\n"
+                    f"# VOID Dynamic Synthetic Decoy Configuration #{h_val}\n"
                     f"AWS_ACCESS_KEY_ID=AKIAIOSFODNN7_{h_val}\n"
                     f"AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG_{h_val}_KEY\n"
                     f"DATABASE_URL=postgres://decoy_user:{h_val}@127.0.0.1:5432/production_{h_val}\n"
@@ -548,9 +575,10 @@ try {{
 
         try:
             if is_win:
-                rule_name = f"NOASH_ELUMPOT_BLOCK_{ip.replace('.', '_')}"
+                rule_name = f"VOID_OPTICS_BLOCK_{ip.replace('.', '_')}"
                 cmd = f'netsh advfirewall firewall add rule name="{rule_name}" dir=in action=block remoteip={ip}'
-                res = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3)
+                res = subprocess.run(
+                    cmd, shell=True, capture_output=True, text=True, timeout=3)
                 success = res.returncode == 0
                 message = f"Windows Firewall rule '{rule_name}' executed."
                 if not success and not has_privilege:
@@ -558,13 +586,15 @@ try {{
                     success = True  # Memory-level block still active
             else:
                 cmd = f"sudo -n ufw deny from {ip} to any"
-                res = subprocess.run(cmd, shell=True, capture_output=True, text=True, timeout=3)
+                res = subprocess.run(
+                    cmd, shell=True, capture_output=True, text=True, timeout=3)
                 if res.returncode == 0:
                     success = True
                     message = f"Linux UFW rule added: blocked {ip}."
                 else:
                     cmd_ip = f"sudo -n iptables -A INPUT -s {ip} -j DROP"
-                    res2 = subprocess.run(cmd_ip, shell=True, capture_output=True, text=True, timeout=3)
+                    res2 = subprocess.run(
+                        cmd_ip, shell=True, capture_output=True, text=True, timeout=3)
                     success = res2.returncode == 0
                     message = f"Linux iptables rule executed for {ip}."
                     if not success and not has_privilege:
@@ -617,7 +647,8 @@ try {{
         """Runs background TCP socket listener for SSH Honeypot (Port 2222)."""
         if not self.ssh_socket:
             return
-        print(f"[elumPot] SSH Honeypot listening loop active on port {self.ssh_port}")
+        print(
+            f"[Optics] SSH Honeypot listening loop active on port {self.ssh_port}")
 
         while self.is_running:
             try:
@@ -644,11 +675,13 @@ try {{
             conn.settimeout(60.0)
 
             # Internal Vulnerability Audit Bypass:
-            # When Avanger is running an internal system audit, respond with SSH banner immediately
-            is_internal_audit = client_ip in ("127.0.0.1", "::1", "localhost") and self.audit_mode
+            # When Quark is running an internal system audit, respond with SSH banner immediately
+            is_internal_audit = client_ip in (
+                "127.0.0.1", "::1", "localhost") and self.audit_mode
             if is_internal_audit:
                 try:
-                    conn.sendall(b"SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1\r\n")
+                    conn.sendall(
+                        b"SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1\r\n")
                     conn.close()
                 except Exception:
                     pass
@@ -682,9 +715,9 @@ try {{
                 with self.logs_lock:
                     self.ssh_logs.insert(0, log_entry)
 
-                # Trigger Native OS Desktop Notification directly from Python (Works even if NO-ASH UI is closed!)
+                # Trigger Native OS Desktop Notification directly from Python (Works even if VOID UI is closed!)
                 self.trigger_native_os_notification(
-                    "NO-ASH CRITICAL INTRUSION ALERT",
+                    "VOID CRITICAL INTRUSION ALERT",
                     log_entry["plain_english_summary"],
                     client_ip
                 )
@@ -733,7 +766,8 @@ try {{
 
             if cmd_str:
                 # 5. SECONDARY FAIL-SAFE BARRIER WALL: Check for sandbox escape attempt
-                is_escape, escape_reason = self.check_sandbox_escape_probe(cmd_str)
+                is_escape, escape_reason = self.check_sandbox_escape_probe(
+                    cmd_str)
                 if is_escape:
                     self.block_ip_firewall(client_ip)
                     exec_log = {
@@ -789,7 +823,8 @@ try {{
         """Runs background TCP socket listener for Web Decoy Trap (Port 8080)."""
         if not self.web_socket:
             return
-        print(f"[elumPot] Web Decoy listening loop active on port {self.web_port}")
+        print(
+            f"[Optics] Web Decoy listening loop active on port {self.web_port}")
 
         while self.is_running:
             try:
@@ -831,13 +866,13 @@ try {{
                     break
 
             # Internal Vulnerability Audit Bypass:
-            # When Avanger is running an internal system audit, respond with clean decoy page immediately
+            # When Quark is running an internal system audit, respond with clean decoy page immediately
             is_internal_audit = client_ip in ("127.0.0.1", "::1", "localhost") and (
                 self.audit_mode or "nmap" in user_agent.lower() or "scanner" in user_agent.lower()
             )
             if is_internal_audit:
                 try:
-                    resp_body = "<html><body><h1>NO-ASH Web Decoy Active</h1></body></html>\r\n"
+                    resp_body = "<html><body><h1>VOID Web Decoy Active</h1></body></html>\r\n"
                     resp = (
                         f"HTTP/1.1 200 OK\r\n"
                         f"Server: Apache/2.4.52 (Ubuntu)\r\n"
@@ -876,7 +911,8 @@ try {{
             if is_escape:
                 self.block_ip_firewall(client_ip)
                 log_entry["type"] = "emergency_block"
-                log_entry["plain_english_summary"] = f"Emergency Block Enforced: Sandbox boundary probed, host protection auto-activated! (Escape Vector: '{escape_reason}')"
+                log_entry[
+                    "plain_english_summary"] = f"Emergency Block Enforced: Sandbox boundary probed, host protection auto-activated! (Escape Vector: '{escape_reason}')"
                 log_entry["status"] = "blocked"
                 with self.logs_lock:
                     self.web_logs.insert(0, log_entry)
@@ -896,9 +932,9 @@ try {{
                 with self.logs_lock:
                     self.web_logs.insert(0, log_entry)
 
-                # Trigger Native OS Desktop Notification directly from Python (Works even if NO-ASH UI is closed!)
+                # Trigger Native OS Desktop Notification directly from Python (Works even if VOID UI is closed!)
                 self.trigger_native_os_notification(
-                    "NO-ASH CRITICAL INTRUSION ALERT",
+                    "VOID CRITICAL INTRUSION ALERT",
                     log_entry["plain_english_summary"],
                     client_ip
                 )
@@ -962,7 +998,7 @@ try {{
                 f"HTTP/1.1 {status_text}\r\n"
                 "Content-Type: text/plain; charset=utf-8\r\n"
                 f"Content-Length: {len(decoy_body)}\r\n"
-                "Server: elumPot-DecoyEngine/1.0\r\n"
+                "Server: Optics-DecoyEngine/1.0\r\n"
                 "Connection: close\r\n\r\n"
                 f"{decoy_body}"
             )
@@ -1007,7 +1043,8 @@ try {{
                 ssh_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 if hasattr(socket, 'SO_REUSEPORT'):
                     try:
-                        ssh_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+                        ssh_sock.setsockopt(
+                            socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
                     except Exception:
                         pass
                 ssh_sock.bind(("0.0.0.0", p))
@@ -1042,7 +1079,8 @@ try {{
                 web_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
                 if hasattr(socket, 'SO_REUSEPORT'):
                     try:
-                        web_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+                        web_sock.setsockopt(
+                            socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
                     except Exception:
                         pass
                 web_sock.bind(("0.0.0.0", p))
@@ -1069,15 +1107,17 @@ try {{
             }
 
         self.is_running = True
-        self.ssh_thread = threading.Thread(target=self._run_ssh_honeypot, daemon=True)
-        self.web_thread = threading.Thread(target=self._run_web_decoy, daemon=True)
+        self.ssh_thread = threading.Thread(
+            target=self._run_ssh_honeypot, daemon=True)
+        self.web_thread = threading.Thread(
+            target=self._run_web_decoy, daemon=True)
 
         self.ssh_thread.start()
         self.web_thread.start()
 
         return {
             "status": "success",
-            "message": f"elumPot Deception Daemon started successfully on SSH:{self.ssh_port} & Web:{self.web_port}.",
+            "message": f"Optics Deception Daemon started successfully on SSH:{self.ssh_port} & Web:{self.web_port}.",
             "ssh_port": self.ssh_port,
             "web_port": self.web_port,
             "daemon_active": True
@@ -1097,7 +1137,7 @@ try {{
             except Exception:
                 pass
 
-        return {"status": "success", "message": "elumPot Deception Daemon stopped."}
+        return {"status": "success", "message": "Optics Deception Daemon stopped."}
 
     def update_config(self, ssh_port: Optional[int] = None, web_port: Optional[int] = None) -> Dict[str, Any]:
         """Dynamically updates port configuration. Restarts daemon if it was running."""
@@ -1120,7 +1160,8 @@ try {{
 
         if was_running:
             start_result = self.start_daemon()
-            result["daemon_restarted"] = start_result.get("daemon_active", False)
+            result["daemon_restarted"] = start_result.get(
+                "daemon_active", False)
             result["message"] += f" Daemon {'restarted' if result['daemon_restarted'] else 'restart failed'}."
 
         return result
@@ -1131,7 +1172,8 @@ try {{
             total_logs = len(self.ssh_logs) + len(self.web_logs)
             blocked_count = len(self.blocked_ips)
             traces_count = len(self.web_traces)
-            total_decoys = sum(len(s.cached_ai_decoys) for s in self.sessions.values())
+            total_decoys = sum(len(s.cached_ai_decoys)
+                               for s in self.sessions.values())
 
         return {
             "status": "success",
@@ -1201,11 +1243,16 @@ try {{
 
         # Geo-diverse simulated attacker pool (randomized per trigger)
         sim_pool = [
-            {"ip": "198.51.100.42", "location": "London, United Kingdom", "cc": "GB", "lat": 51.5074, "lon": -0.1278},
-            {"ip": "203.0.113.77", "location": "Beijing, China", "cc": "CN", "lat": 39.9042, "lon": 116.4074},
-            {"ip": "185.220.101.33", "location": "Moscow, Russia", "cc": "RU", "lat": 55.7558, "lon": 37.6173},
-            {"ip": "45.33.32.156", "location": "São Paulo, Brazil", "cc": "BR", "lat": -23.5505, "lon": -46.6333},
-            {"ip": "104.248.29.91", "location": "New York, United States", "cc": "US", "lat": 40.7128, "lon": -74.0060},
+            {"ip": "198.51.100.42", "location": "London, United Kingdom",
+                "cc": "GB", "lat": 51.5074, "lon": -0.1278},
+            {"ip": "203.0.113.77", "location": "Beijing, China",
+                "cc": "CN", "lat": 39.9042, "lon": 116.4074},
+            {"ip": "185.220.101.33", "location": "Moscow, Russia",
+                "cc": "RU", "lat": 55.7558, "lon": 37.6173},
+            {"ip": "45.33.32.156", "location": "São Paulo, Brazil",
+                "cc": "BR", "lat": -23.5505, "lon": -46.6333},
+            {"ip": "104.248.29.91", "location": "New York, United States",
+                "cc": "US", "lat": 40.7128, "lon": -74.0060},
         ]
         attacker = random.choice(sim_pool)
         sim_ip = attacker["ip"]
@@ -1246,7 +1293,7 @@ try {{
 
         # Trigger Native OS Desktop Notification for the simulated attack
         self.trigger_native_os_notification(
-            "NO-ASH CRITICAL INTRUSION ALERT",
+            "VOID CRITICAL INTRUSION ALERT",
             sim_log["plain_english_summary"],
             sim_ip
         )

@@ -19,7 +19,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
   const navItems = [
     {
       id: 'nodes',
-      title: 'AshCode // Sandboxed Workspace',
+      title: "DCS // developer's colabrative space",
       shortcut: '1',
       icon: (
         <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -30,7 +30,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
     },
     {
       id: 'ide',
-      title: 'SuperForge // AI Security Engine',
+      title: 'lumen',
       shortcut: '2',
       icon: (
         <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -49,7 +49,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
     },
     {
       id: 'timeline',
-      title: 'Avanger // Threat Scanner',
+      title: 'quark',
       shortcut: '3',
       icon: (
         <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -61,7 +61,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
     },
     {
       id: 'bento',
-      title: 'elumPot // Deception HoneyNet',
+      title: 'optics',
       shortcut: '4',
       icon: (
         <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -75,7 +75,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
     },
     {
       id: 'settings',
-      title: 'AshFinder // Threat Reconnaissance',
+      title: 'MAG // mantor and guide',
       shortcut: '5',
       icon: (
         <svg className="w-5 h-5 transition-transform group-hover:scale-110" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -107,20 +107,18 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
     >
       {/* 1. COLLAPSED VERTICAL HANDLE ("DANTI" / STRIP) */}
       <div
-        className={`w-1.5 h-36 rounded-r-full bg-gradient-to-b from-[#c89b3c]/20 via-[#c89b3c] to-[#c89b3c]/20 shadow-[0_0_15px_rgba(200,155,60,0.8)] cursor-pointer transition-all duration-300 ${
-          isHovered
+        className={`w-1.5 h-36 rounded-r-full bg-gradient-to-b from-[#c89b3c]/20 via-[#c89b3c] to-[#c89b3c]/20 shadow-[0_0_15px_rgba(200,155,60,0.8)] cursor-pointer transition-all duration-300 ${isHovered
             ? 'opacity-0 scale-y-0 -translate-x-full pointer-events-none'
             : 'opacity-100 scale-y-100 translate-x-0'
-        }`}
+          }`}
       />
 
       {/* 2. EXPANDED FLOATING MORPH SQUIRCLE ICONS PANEL */}
       <div
-        className={`flex flex-col gap-3 items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-          isHovered
+        className={`flex flex-col gap-3 items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isHovered
             ? 'opacity-100 translate-x-3 scale-100 pointer-events-auto'
             : 'opacity-0 -translate-x-12 scale-90 pointer-events-none'
-        }`}
+          }`}
       >
         {/* Home / Matrix Button */}
         <div className="relative group/tip flex items-center">
@@ -158,7 +156,12 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
 
         {/* 5 Main Modules */}
         {navItems.map((item, idx) => {
-          const isActive = activeMod === item.id || (item.id === 'nodes' && activeMod === 'code') || (item.id === 'ide' && activeMod === 'forge') || (item.id === 'bento' && activeMod === 'elum')
+          const isActive = activeMod === item.id ||
+            (item.id === 'nodes' && (activeMod === 'code' || activeMod === 'dcs')) ||
+            (item.id === 'ide' && (activeMod === 'forge' || activeMod === 'lumen')) ||
+            (item.id === 'timeline' && activeMod === 'quark') ||
+            (item.id === 'bento' && (activeMod === 'elum' || activeMod === 'optics')) ||
+            (item.id === 'settings' && activeMod === 'mag')
           return (
             <div key={item.id} className="relative group/tip flex items-center">
               <button

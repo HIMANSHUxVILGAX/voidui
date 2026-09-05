@@ -27,16 +27,16 @@ PERSONAS: Dict[str, Dict[str, str]] = {
         "name": "Security Consultant",
         "description": "Expert cybersecurity analyst offering threat assessment, vulnerability remediation, and incidence response guidance.",
         "system_prompt": (
-            "You are SuperForge Security Consultant, an expert SOC cybersecurity analyst for Avanger Scanner & System Hardening.\n\n"
+            "You are Lumen Security Consultant, an expert SOC cybersecurity analyst for Quark.\n\n"
             "STRICT OUT-OF-SCOPE REFUSAL RULES:\n"
-            "1. You deal EXCLUSIVELY with Avanger vulnerability scans, malware remediation, system lockdown fixes, and cybersecurity threats.\n"
-            "2. Under NO circumstances will you assist with coding, programming, software development, writing code, or other modules (ashCode, elumPot, AshFinder).\n"
+            "1. You deal EXCLUSIVELY with Quark vulnerability scans, malware remediation, system lockdown fixes, and cybersecurity threats.\n"
+            "2. Under NO circumstances will you assist with coding, programming, software development, writing code, or other modules (DCS, Optics, MAG).\n"
             "3. If the user asks about coding, programming, or non-security modules for the FIRST time, respond EXACTLY with:\n"
             "   'me isme help nahi kr skta, ye mera kaam nahi'\n"
             "4. If the user asks about coding, programming, or non-security modules AGAIN (second time onwards), respond EXACTLY with:\n"
             "   'app jitna bhi jesa puch le me isme help nahi kr skta'\n\n"
             "GENERAL GUIDELINES:\n"
-            "1. For valid Avanger security & threat queries, be helpful, natural, and direct in whatever language/dialect the user uses (Hinglish, Hindi, English).\n"
+            "1. For valid Quark security & threat queries, be helpful, natural, and direct in whatever language/dialect the user uses (Hinglish, Hindi, English).\n"
             "2. Give clear, concise shell commands (like `rm`, `kill`) without dumping giant unnecessary disclaimers."
         )
     },
@@ -44,33 +44,33 @@ PERSONAS: Dict[str, Dict[str, str]] = {
         "name": "System Hardening Advisor",
         "description": "OS security specialist focused on SSH configuration, firewall rules, and security tool installation.",
         "system_prompt": (
-            "You are SuperForge System Hardening Advisor. You specialize in operating system security, "
+            "You are Lumen System Hardening Advisor. You specialize in operating system security, "
             "configuring SSH daemon directives (e.g. PermitRootLogin, PasswordAuthentication), firewall setup (ufw/iptables), "
             "and installing CLI security suites (Nmap, ClamAV, Lynis). Provide clear step-by-step shell commands."
         )
     },
     "decoy_analyst": {
         "name": "Decoy & Honeypot Specialist",
-        "description": "Deception technology analyst reviewing honeypot logs (elumPot) and web decoy trap events.",
+        "description": "Deception technology analyst reviewing honeypot logs (Optics) and web decoy trap events.",
         "system_prompt": (
-            "You are SuperForge Decoy & Honeypot Analyst. You analyze deception network activity, "
+            "You are Lumen Decoy & Honeypot Analyst. You analyze deception network activity (Optics), "
             "investigate fake service intrusion attempts (SSH honeypot on port 2222, web traps), "
             "identify attacker techniques, and recommend perimeter blocking strategies."
         )
     },
     "code_auditor": {
-        "name": "ashCode Auditor",
-        "description": "Source code security reviewer searching for web backdoors, webshells, and unsafe code patterns.",
+        "name": "Aegis",
+        "description": "Developer's colabrative space (DCS) security reviewer searching for web backdoors, webshells, and unsafe code patterns.",
         "system_prompt": (
-            "You are SuperForge ashCode Security Auditor. You specialize in static code analysis, detecting webshells, "
+            "You are Aegis, developer's colabrative space (DCS) security auditor inside VOID. You specialize in static code analysis, detecting webshells, "
             "eval/exec injection vulnerabilities, double extension execution tricks, and obfuscated payloads."
         )
     },
     "roadmap_advisor": {
-        "name": "Career & Security Roadmap Coach",
-        "description": "Cybersecurity learning path advisor offering skill development and certification roadmaps.",
+        "name": "MAG Coach",
+        "description": "Mantor and guide (MAG) learning path advisor offering skill development and certification roadmaps.",
         "system_prompt": (
-            "You are SuperForge Security Roadmap Coach. You guide developers and aspiring security specialists through "
+            "You are Lumen Roadmap Coach for MAG (mantor and guide). You guide developers and aspiring security specialists through "
             "learning pathways (SOC Analyst, Penetration Tester, DevSecOps), certifications (CompTIA Security+, CEH, OSCP), "
             "and practical lab challenges."
         )
@@ -79,7 +79,8 @@ PERSONAS: Dict[str, Dict[str, str]] = {
 
 # Configurable settings
 CONFIG = {
-    "default_provider": os.getenv("DEFAULT_PROVIDER", "local_qwen"),  # 'local_qwen', 'auto', 'gemini'
+    # 'local_qwen', 'auto', 'gemini'
+    "default_provider": os.getenv("DEFAULT_PROVIDER", "local_qwen"),
     "ollama_url": os.getenv("OLLAMA_URL", "http://localhost:11434"),
     "ollama_model": os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b"),
     "gemini_model": "gemini-3.6-flash",
@@ -97,14 +98,15 @@ class KeyManager:
     def _load_keys(self):
         primary_key = os.getenv("GEMINI_API_KEY", "").strip()
         backup_keys_str = os.getenv("GEMINI_BACKUP_KEYS", "").strip()
-        
+
         all_keys = []
         if primary_key:
             all_keys.append(primary_key)
         if backup_keys_str:
-            all_keys.extend([k.strip() for k in backup_keys_str.split(",") if k.strip()])
-            
-        self.keys = list(dict.fromkeys(all_keys)) # Remove duplicates
+            all_keys.extend([k.strip()
+                            for k in backup_keys_str.split(",") if k.strip()])
+
+        self.keys = list(dict.fromkeys(all_keys))  # Remove duplicates
 
     def get_valid_key(self) -> Optional[str]:
         if not self.keys:
@@ -121,7 +123,8 @@ class KeyManager:
     def mark_rate_limited(self, key: str, cooldown_seconds: float = 60.0):
         if key:
             self.rate_limited_until[key] = time.time() + cooldown_seconds
-            print(f"[KeyManager] API Key ending with ...{key[-4:]} marked rate-limited for {cooldown_seconds}s")
+            print(
+                f"[KeyManager] API Key ending with ...{key[-4:]} marked rate-limited for {cooldown_seconds}s")
             # Rotate index
             if self.keys:
                 self.current_idx = (self.current_idx + 1) % len(self.keys)
@@ -144,7 +147,8 @@ def tool_get_system_metrics() -> Dict[str, Any]:
 
 def tool_check_security_tools() -> Dict[str, Any]:
     """Checks presence of CLI security tools on host system."""
-    import shutil, platform
+    import shutil
+    import platform
     return {
         "nmap": shutil.which("nmap") is not None,
         "clamav": shutil.which("clamscan") is not None,
@@ -189,13 +193,14 @@ async def query_ollama(prompt: str, system_prompt: str, stream: bool = False) ->
     }).encode("utf-8")
 
     try:
-        req = urllib.request.Request(url, data=payload, headers={"Content-Type": "application/json"}, method="POST")
+        req = urllib.request.Request(url, data=payload, headers={
+                                     "Content-Type": "application/json"}, method="POST")
         loop = asyncio.get_event_loop()
-        
+
         def _execute():
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read().decode())
-                
+
         result = await loop.run_in_executor(None, _execute)
         return {"status": "success", "text": result.get("response", ""), "provider": "local_qwen"}
     except Exception as e:
@@ -223,9 +228,9 @@ async def query_free_llm_pool(prompt: str, system_prompt: str) -> Dict[str, Any]
 
     headers = {
         "Content-Type": "application/json",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) SuperForge/1.0"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Lumen/1.0"
     }
-    
+
     if groq_key:
         url = "https://api.groq.com/openai/v1/chat/completions"
         headers["Authorization"] = f"Bearer {groq_key}"
@@ -254,8 +259,10 @@ async def query_free_llm_pool(prompt: str, system_prompt: str) -> Dict[str, Any]
     }).encode("utf-8")
 
     try:
-        req = urllib.request.Request(url, data=payload, headers=headers, method="POST")
+        req = urllib.request.Request(
+            url, data=payload, headers=headers, method="POST")
         loop = asyncio.get_event_loop()
+
         def _execute():
             with urllib.request.urlopen(req, timeout=25) as resp:
                 return json.loads(resp.read().decode())
@@ -267,7 +274,7 @@ async def query_free_llm_pool(prompt: str, system_prompt: str) -> Dict[str, Any]
 
 
 # Main AI Response Function
-async def generate_superforge_response(
+async def generate_lumen_response(
     user_message: str,
     persona_id: str = "security_consultant",
     provider_preference: str = "auto",
@@ -301,14 +308,15 @@ async def generate_superforge_response(
         try:
             client = genai.Client(api_key=active_key)
             contents = f"{system_prompt}\n\nUser Question: {user_message}"
-            
+
             loop = asyncio.get_event_loop()
+
             def _gen():
                 return client.models.generate_content(
                     model=CONFIG["gemini_model"],
                     contents=contents
                 )
-            
+
             response = await loop.run_in_executor(None, _gen)
             return {
                 "status": "success",
@@ -320,7 +328,8 @@ async def generate_superforge_response(
         except Exception as e:
             err_str = str(e)
             if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "Quota exceeded" in err_str:
-                key_manager.mark_rate_limited(active_key, cooldown_seconds=60.0)
+                key_manager.mark_rate_limited(
+                    active_key, cooldown_seconds=60.0)
                 # Failover sequence in auto mode: Free LLM Pool -> Local Qwen
                 if provider_preference == "auto":
                     free_res = await query_free_llm_pool(user_message, system_prompt)
@@ -331,7 +340,8 @@ async def generate_superforge_response(
                     ollama_stat = check_ollama_status()
                     if ollama_stat["online"]:
                         res = await query_ollama(user_message, system_prompt)
-                        res["text"] = f"[Notice: Cloud API rate-limited. Served via Local Qwen]\n\n" + res.get("text", "")
+                        res["text"] = f"[Notice: Cloud API rate-limited. Served via Local Qwen]\n\n" + \
+                            res.get("text", "")
                         return res
 
     # 4. Fallback to Free LLM Pool / Local Ollama
@@ -342,7 +352,8 @@ async def generate_superforge_response(
     ollama_stat = check_ollama_status()
     if ollama_stat["online"]:
         res = await query_ollama(user_message, system_prompt)
-        res["text"] = f"[Notice: Served via Local Ollama / Qwen]\n\n" + res.get("text", "")
+        res["text"] = f"[Notice: Served via Local Ollama / Qwen]\n\n" + \
+            res.get("text", "")
         return res
 
     # 4. Deterministic offline guidance. This is intentionally useful rather than
@@ -350,16 +361,16 @@ async def generate_superforge_response(
     return {
         "status": "warning",
         "text": (
-            "**SuperForge Offline Security Guidance**\n\n"
+            "**Lumen Offline Security Guidance**\n\n"
             "The configured AI providers are unavailable, so this response was generated locally from a safe checklist. "
             "No system changes were made.\n\n"
             "**Immediate review**\n"
             "1. Confirm the finding's exact path, service, or configuration before applying any fix.\n"
             "2. For a suspicious file, isolate it first and preserve its hash and evidence; do not execute it.\n"
             "3. For a network source, validate the IP and review the proposed firewall rule before applying it.\n"
-            "4. Re-run Avanger after remediation and verify that the finding is resolved.\n\n"
+            "4. Re-run Quark after remediation and verify that the finding is resolved.\n\n"
             "**Provider status**\n"
-            "Gemini is not available and the local Ollama endpoint is offline. Configure a provider in SuperForge settings "
+            "Gemini is not available and the local Ollama endpoint is offline. Configure a provider in Lumen settings "
             "when AI-assisted analysis is required."
         ),
         "provider": "none",
@@ -369,33 +380,35 @@ async def generate_superforge_response(
 
 
 # SSE Stream Generator
-async def generate_superforge_stream(
+async def generate_lumen_stream(
     user_message: str,
     persona_id: str = "security_consultant",
     provider_preference: str = "auto"
 ) -> AsyncGenerator[str, None]:
     persona_info = PERSONAS.get(persona_id, PERSONAS["security_consultant"])
     system_prompt = persona_info["system_prompt"]
-    
+
     active_key = key_manager.get_valid_key()
-    
+
     if GENAI_AVAILABLE and active_key and provider_preference in ("auto", "gemini"):
         try:
             client = genai.Client(api_key=active_key)
             contents = f"{system_prompt}\n\nUser Question: {user_message}"
-            
+
             # Sync to async generator wrapper for Gemini stream
             loop = asyncio.get_event_loop()
+
             def _get_stream():
                 return client.models.generate_content_stream(
                     model=CONFIG["gemini_model"],
                     contents=contents
                 )
-            
+
             stream = await loop.run_in_executor(None, _get_stream)
             for chunk in stream:
                 if chunk.text:
-                    payload = json.dumps({"text": chunk.text, "provider": "gemini"})
+                    payload = json.dumps(
+                        {"text": chunk.text, "provider": "gemini"})
                     yield f"data: {payload}\n\n"
                     await asyncio.sleep(0.01)
             yield f"data: [DONE]\n\n"
@@ -406,7 +419,13 @@ async def generate_superforge_stream(
                 key_manager.mark_rate_limited(active_key)
 
     # Fallback to local Ollama stream or static notice
-    res = await generate_superforge_response(user_message, persona_id, provider_preference)
-    payload = json.dumps({"text": res.get("text", ""), "provider": res.get("provider", "fallback")})
+    res = await generate_lumen_response(user_message, persona_id, provider_preference)
+    payload = json.dumps({"text": res.get("text", ""),
+                         "provider": res.get("provider", "fallback")})
     yield f"data: {payload}\n\n"
     yield f"data: [DONE]\n\n"
+
+
+# Backward-compatible aliases
+generate_superforge_response = generate_lumen_response
+generate_superforge_stream = generate_lumen_stream

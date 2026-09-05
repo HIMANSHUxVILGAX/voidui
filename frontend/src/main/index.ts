@@ -27,15 +27,21 @@ async function isBackendRunning(): Promise<boolean> {
 }
 
 function resolveBackendExecutable(): string | null {
-  const binaryName = process.platform === 'win32' ? 'noash-backend.exe' : 'noash-backend'
+  const binaryName = process.platform === 'win32' ? 'void-backend.exe' : 'void-backend'
+  const fallbackBinaryName = process.platform === 'win32' ? 'noash-backend.exe' : 'noash-backend'
   const possiblePaths = [
     // Production packaged paths (extraResources bin/)
-    join(process.resourcesPath, 'bin', 'noash-backend', binaryName),
-    join(process.resourcesPath, 'app.asar.unpacked', 'bin', 'noash-backend', binaryName),
+    join(process.resourcesPath, 'bin', 'void-backend', binaryName),
+    join(process.resourcesPath, 'app.asar.unpacked', 'bin', 'void-backend', binaryName),
+    join(process.resourcesPath, 'bin', 'noash-backend', fallbackBinaryName),
+    join(process.resourcesPath, 'app.asar.unpacked', 'bin', 'noash-backend', fallbackBinaryName),
     // Local unpacked/dev paths
-    join(app.getAppPath(), '..', 'backend', 'dist', 'noash-backend', binaryName),
-    join(__dirname, '..', '..', '..', 'backend', 'dist', 'noash-backend', binaryName),
-    join(__dirname, '..', '..', 'resources', 'bin', 'noash-backend', binaryName)
+    join(app.getAppPath(), '..', 'backend', 'dist', 'void-backend', binaryName),
+    join(__dirname, '..', '..', '..', 'backend', 'dist', 'void-backend', binaryName),
+    join(__dirname, '..', '..', 'resources', 'bin', 'void-backend', binaryName),
+    join(app.getAppPath(), '..', 'backend', 'dist', 'noash-backend', fallbackBinaryName),
+    join(__dirname, '..', '..', '..', 'backend', 'dist', 'noash-backend', fallbackBinaryName),
+    join(__dirname, '..', '..', 'resources', 'bin', 'noash-backend', fallbackBinaryName)
   ]
 
   for (const p of possiblePaths) {
@@ -79,7 +85,8 @@ async function startBackendService(): Promise<void> {
 function stopBackendService(): void {
   try {
     if (process.platform === 'win32') {
-      exec('taskkill /IM noash-backend.exe /F /T', () => {})
+      exec('taskkill /IM void-backend.exe /F /T', () => { })
+      exec('taskkill /IM noash-backend.exe /F /T', () => { })
     } else if (backendProcess && backendProcess.pid) {
       try {
         process.kill(-backendProcess.pid, 'SIGTERM')
@@ -103,16 +110,16 @@ function createTray(): void {
   try {
     if (tray) return
     tray = new Tray(icon)
-    tray.setToolTip('NO-ASH Deception Daemon & Security Studio')
+    tray.setToolTip('VOID Deception Daemon & Security Studio')
 
     const contextMenu = Menu.buildFromTemplate([
       {
-        label: 'NO-ASH Deception Daemon: ACTIVE',
+        label: 'VOID Deception Daemon: ACTIVE',
         enabled: false
       },
       { type: 'separator' },
       {
-        label: 'Open NO-ASH Studio',
+        label: 'Open VOID Studio',
         click: () => {
           if (mainWindow) {
             if (mainWindow.isMinimized()) mainWindow.restore()
@@ -131,7 +138,7 @@ function createTray(): void {
       },
       { type: 'separator' },
       {
-        label: 'Quit NO-ASH Completely',
+        label: 'Quit VOID Completely',
         click: () => {
           isQuitting = true
           app.quit()
@@ -186,9 +193,11 @@ function forceFocusAppWindow(): void {
   if (process.platform === 'linux') {
     try {
       exec(
+        'wmctrl -a "VOID Studio" 2>/dev/null || ' +
+        'xdotool search --name "VOID Studio" windowactivate --sync windowraise 2>/dev/null || ' +
         'wmctrl -a "NO-ASH Studio" 2>/dev/null || ' +
-          'xdotool search --name "NO-ASH Studio" windowactivate --sync windowraise 2>/dev/null',
-        () => {}
+        'xdotool search --name "NO-ASH Studio" windowactivate --sync windowraise 2>/dev/null',
+        () => { }
       )
     } catch {
       // ignore if wmctrl/xdotool both unavailable
@@ -208,7 +217,7 @@ function handleProtocolUrl(rawUrl: string): void {
   try {
     console.log('[Main] Protocol action received:', rawUrl)
     const parsed = new URL(rawUrl)
-    if (parsed.protocol !== 'noash:') return
+    if (parsed.protocol !== 'void:' && parsed.protocol !== 'noash:') return
 
     const action = parsed.searchParams.get('action')
     const ip = parsed.searchParams.get('ip') || ''
@@ -217,14 +226,14 @@ function handleProtocolUrl(rawUrl: string): void {
     forceFocusAppWindow()
     mainWindow?.webContents.send('intrusion-action', { action, ip })
   } catch (error) {
-    console.error('[Main] Invalid NO-ASH action URL:', error)
+    console.error('[Main] Invalid VOID action URL:', error)
   }
 }
 
 function createWindow(): void {
   // Create the browser window with custom frameless titlebar.
   mainWindow = new BrowserWindow({
-    title: 'NO-ASH Studio',
+    title: 'VOID Studio',
     width: 1200,
     height: 800,
     minWidth: 900,
@@ -245,7 +254,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('ready-to-show', () => {
-    mainWindow?.setTitle('NO-ASH Studio')
+    mainWindow?.setTitle('VOID Studio')
     if (!startedHidden) {
       forceFocusAppWindow()
     }
@@ -334,11 +343,13 @@ app.whenReady().then(async () => {
     app.getLoginItemSettings().wasOpenedAtLogin
 
   // Must match electron-builder.yml so Windows Action Center associates the toast
-  // with the installed NO-ASH application instead of the generic Electron runtime.
-  electronApp.setAppUserModelId('com.noash.studio')
+  // with the installed VOID application instead of the generic Electron runtime.
+  electronApp.setAppUserModelId('com.void.studio')
   if (!app.isPackaged) {
+    app.setAsDefaultProtocolClient('void', process.execPath, [join(__dirname, 'index.js')])
     app.setAsDefaultProtocolClient('noash', process.execPath, [join(__dirname, 'index.js')])
   } else {
+    app.setAsDefaultProtocolClient('void')
     app.setAsDefaultProtocolClient('noash')
   }
 
@@ -391,7 +402,7 @@ app.whenReady().then(async () => {
     try {
       if (Notification.isSupported()) {
         const notif = new Notification({
-          title: title || 'NO-ASH Intrusion Alert',
+          title: title || 'VOID Intrusion Alert',
           body: body || 'Attacker detected probing honeypot trap ports!',
           icon: process.platform === 'linux' ? icon : undefined
         })
@@ -489,13 +500,13 @@ app.whenReady().then(async () => {
   createTray()
   createWindow()
 
-  const initialProtocolUrl = process.argv.find((arg) => arg.startsWith('noash://'))
+  const initialProtocolUrl = process.argv.find((arg) => arg.startsWith('void://') || arg.startsWith('noash://'))
   if (initialProtocolUrl) {
     setTimeout(() => handleProtocolUrl(initialProtocolUrl), 500)
   }
 
   // --- MAIN-PROCESS INTRUSION WATCHER ---
-  // The renderer's own poll gets background-throttled while NO-ASH is minimized or
+  // The renderer's own poll gets background-throttled while VOID is minimized or
   // hidden to tray, and a packaged (file://) renderer is subject to CORS. The main
   // process is immune to both, so it owns the authoritative alert trigger: it raises
   // the window to the foreground and pushes the intrusion to the renderer so the
@@ -506,7 +517,7 @@ app.whenReady().then(async () => {
     try {
       const res = await fetch('http://127.0.0.1:8000/api/honeypot/logs')
       if (!res.ok) return
-            const data = (await res.json()) as {
+      const data = (await res.json()) as {
         status?: string
         logs?: Array<{
           id: string
@@ -531,7 +542,7 @@ app.whenReady().then(async () => {
       if (seenIntrusionIds.has(activeLog.id)) return
       seenIntrusionIds.add(activeLog.id)
 
-            // The main process owns the OS toast so it still fires while the renderer
+      // The main process owns the OS toast so it still fires while the renderer
       // is hidden, minimized, or background-throttled behind another application.
       // Windows receives its actionable toast from the Python backend so the
       // BLOCK and VIEW & MANIPULATE buttons can invoke the action-handler URL.
@@ -542,7 +553,7 @@ app.whenReady().then(async () => {
         if (notificationSupported) {
           try {
             const notification = new Notification({
-              title: 'NO-ASH CRITICAL INTRUSION ALERT',
+              title: 'VOID CRITICAL INTRUSION ALERT',
               body: activeLog.plain_english_summary ||
                 `Unauthorized probe from ${activeLog.attacker_ip || 'unknown IP'}`,
               silent: false,
@@ -616,7 +627,7 @@ app.whenReady().then(async () => {
 
   app.on('second-instance', (_event, commandLine) => {
     console.log('[Main] second-instance commandLine:', JSON.stringify(commandLine))
-    const protocolUrl = commandLine.find((arg) => arg.startsWith('noash://'))
+    const protocolUrl = commandLine.find((arg) => arg.startsWith('void://') || arg.startsWith('noash://'))
     if (protocolUrl) {
       handleProtocolUrl(protocolUrl)
       return

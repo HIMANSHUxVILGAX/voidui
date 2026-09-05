@@ -1,6 +1,6 @@
-appId: com.noash.studio
-productName: NO-ASH Studio
-copyright: Copyright © 2026 NO-ASH Enterprise Security
+appId: com.void.studio
+productName: VOID Studio
+copyright: Copyright © 2026 VOID Security
 directories:
   output: dist
   buildResources: resources
@@ -12,8 +12,8 @@ files:
   - '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}'
 
 extraResources:
-  - from: '../backend/dist/noash-backend'
-    to: 'bin/noash-backend'
+  - from: '../backend/dist/void-backend'
+    to: 'bin/void-backend'
     filter:
       - '**/*'
 
@@ -29,14 +29,14 @@ nsis:
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
   createStartMenuShortcut: true
-  shortcutName: NO-ASH Studio
+  shortcutName: VOID Studio
   runAfterFinish: true
 
 linux:
   target:
     - AppImage
     - deb
-  maintainer: NO-ASH Support <support@noash.security>
+  maintainer: VOID Support <support@void.security>
   icon: resources/icon.png
   category: Security
 

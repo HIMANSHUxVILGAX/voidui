@@ -142,7 +142,7 @@ export const AttackerTerminal: React.FC<AttackerTerminalProps> = ({ apiBase = 'h
       <div className="p-4 bg-slate-950 text-emerald-400 font-mono text-xs min-h-[200px] max-h-[260px] overflow-y-auto space-y-3">
         {/* Banner Welcome Header */}
         <div className="text-slate-500 border-b border-slate-900 pb-2 space-y-1 text-[11px]">
-          <p># elumPot Active Deception Trapping Environment (Session: {activeSession?.ip})</p>
+          <p># optics Active Deception Trapping Environment (Session: {activeSession?.ip})</p>
           <p># Mirror OS: <span className="text-cyan-400 font-bold">{activeSession?.target_os.toUpperCase()}</span> | Hostname: <span className="text-slate-300">{activeSession?.hostname}</span></p>
           <p># Attacker keystrokes isolated inside HoneypotSession virtual memory context.</p>
         </div>
@@ -186,7 +186,7 @@ export const AttackerTerminal: React.FC<AttackerTerminalProps> = ({ apiBase = 'h
                     -rw-r--r-- 1 root root 8192 Aug 24 18:00 passwords.db
                   </span>
                 ) : (
-                  <span>[elumPot Sandbox] Command output served from virtual memory layer.</span>
+                  <span>[optics Sandbox] Command output served from virtual memory layer.</span>
                 )}
               </div>
             </div>
@@ -212,7 +212,7 @@ export const AttackerTerminal: React.FC<AttackerTerminalProps> = ({ apiBase = 'h
           <span>•</span>
           <span>Zero Host Escalation Guaranteed</span>
         </div>
-        <span className="font-mono text-slate-500">NO-ASH Deception Sandbox v4.0</span>
+        <span className="font-mono text-slate-500">VOID Deception Sandbox v4.0</span>
       </div>
     </div>
   )
