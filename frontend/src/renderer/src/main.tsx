@@ -1,0 +1,15 @@
+import './assets/main.css'
+import 'react-complex-tree/lib/style-modern.css'
+import 'xterm/css/xterm.css';
+
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App'
+
+
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+)

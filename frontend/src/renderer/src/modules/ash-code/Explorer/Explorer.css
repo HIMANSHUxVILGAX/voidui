@@ -1,0 +1,306 @@
+.explorer-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.explorer-panel>div:last-child {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+/* Override react-complex-tree's default (light) theme so it matches the
+   dark app shell instead of showing a white selection/hover bar. */
+.explorer-panel {
+    --rct-color-tree-bg: rgba(52, 52, 52, 0.485);
+
+    --rct-color-focustree-item-selected-bg: #2a2d3a;
+    --rct-color-focustree-item-selected-text: #ffffff;
+
+    --rct-color-focustree-item-hover-bg: #23252f;
+    --rct-color-focustree-item-hover-text: #ffffff;
+
+    --rct-color-focustree-item-active-bg: #1e2029;
+    --rct-color-focustree-item-active-text: #ffffff;
+
+
+
+    --rct-bar-color: #ff5c00;
+    /* accent bar on the selected row */
+    --rct-focus-outline: #ff5c00;
+    /* keyboard-focus outline */
+}
+
+.explorer-panel .rct-tree-item-button {
+    color: #d4d4d4b4;
+}
+
+.explorer-panel .rct-tree-item-arrow svg {
+    fill: #9a9a9a;
+}
+
+
+/* base state: collapsed folder arrow */
+.explorer-panel .rct-tree-item-arrow-path {
+    fill: rgb(167, 47, 0);
+}
+
+/* only when the item is a folder (files don't render an arrow at all,
+   so this mostly matters if you want a different look per-state) */
+.explorer-panel .rct-tree-item-arrow-isFolder .rct-tree-item-arrow-path {
+    fill: orangered;
+}
+
+/* only when that folder is expanded */
+.explorer-panel .rct-tree-item-arrow-expanded .rct-tree-item-arrow-path {
+    fill: white;
+}
+
+/* size/spacing of the clickable arrow hit-area (this part IS a class on the wrapper div, not the svg) */
+.explorer-panel .rct-tree-item-arrow {
+    width: 18px;
+    height: 18px;
+    background-color: #81818111;
+}
+
+
+
+/* ==========================================================================
+   react-complex-tree — COMPLETE styling reference
+   Every class + CSS variable the library ships (style.css + style-modern.css
+   combined), with its default value noted in a comment. Paste this into
+   Explorer.css, scoped under .explorer-panel, and edit values as you like.
+   Anything you don't override just falls back to the library default.
+   ========================================================================== */
+
+.explorer-panel {
+
+    /* ---- COLORS: base surfaces --------------------------------------- */
+    --rct-color-tree-bg: transparent;
+    /* default (light): #f6f8fa | overall tree background */
+    --rct-color-tree-focus-outline: #0366d6;
+    /* outline color when the whole tree container has focus */
+
+    /* ---- COLORS: selected row, when TREE has focus --------------------- */
+    --rct-color-focustree-item-selected-bg: #2a2d3a;
+    /* default: #e8eaed (modern: #f0f2f5) */
+    --rct-color-focustree-item-selected-text: #ffffff;
+    /* default: inherit */
+
+    /* ---- COLORS: selected row, when TREE does NOT have focus ----------- */
+    --rct-color-nonfocustree-item-selected-bg: #23252f;
+    /* default: #e8eaed */
+    --rct-color-nonfocustree-item-selected-text: #cfcfcf;
+    /* default: inherit */
+
+    /* ---- COLORS: focus outline/border on the currently-focused row ----- */
+    --rct-color-focustree-item-focused-border: #ff5c00;
+    /* default: #0366d6 | ring shown when tree has focus */
+    --rct-color-nonfocustree-item-focused-border: #4f4f4f;
+    /* default: #dbdbdb | ring shown when tree lacks focus */
+
+    /* ---- COLORS: hover / active (style-modern.css only) ----------------- */
+    --rct-color-focustree-item-hover-bg: #23252f;
+    /* default (modern): #f0f2f5 */
+    --rct-color-focustree-item-hover-text: #ffffff;
+    /* default (modern): inherit */
+    --rct-color-focustree-item-active-bg: #1e2029;
+    /* default (modern): #e4e6eb | mouse-down state */
+    --rct-color-focustree-item-active-text: #ffffff;
+    /* default (modern): #4f4f4f */
+
+    /* ---- COLORS: drag & drop --------------------------------------------- */
+    --rct-color-focustree-item-draggingover-bg: #33465e;
+    /* default: #ebf0f4 | row you're dragging OVER */
+    --rct-color-focustree-item-draggingover-color: #ffffff;
+    /* default: inherit */
+    --rct-color-drag-between-line-bg: #ff5c00;
+    /* default: #0366d6 | the line shown between two rows */
+
+    /* ---- COLORS: search ---------------------------------------------------- */
+    --rct-color-search-highlight-bg: #5a3b00;
+    /* default: #a2aed2 (modern: #acccf1) | matched substring bg */
+    --rct-search-border: #4f4f4f;
+    /* modern only */
+    --rct-search-border-bottom: #ff5c00;
+    /* modern only, the accent underline */
+    --rct-search-bg: #23252f;
+    /* modern only, search input background */
+    --rct-search-text: #ffffff;
+    /* modern only, search input text */
+
+    /* ---- COLORS: arrow / chevron ------------------------------------------ */
+    --rct-color-arrow: #9a9a9a;
+    /* default: #373a3f | fill color of the expand/collapse chevron */
+
+    /* ---- COLORS: rename input submit button (modern uses these too) ------ */
+    --rct-color-renaming-input-submitbutton-bg: inherit;
+    --rct-color-renaming-input-submitbutton-bg-hover: #ff5c00;
+    --rct-color-renaming-input-submitbutton-bg-active: #cc4a00;
+    --rct-color-renaming-input-submitbutton-text: inherit;
+    --rct-color-renaming-input-submitbutton-text-hover: #ffffff;
+    --rct-color-renaming-input-submitbutton-text-active: #ffffff;
+
+    /* ---- SIZING / SPACING (mostly style-modern.css variables) ------------ */
+    --rct-item-height: 20px;
+    /* default (base): 22px | row height */
+    --rct-item-margin: 1px;
+    /* modern only | vertical gap between rows */
+    --rct-item-padding: 5px;
+    /* modern only | horizontal padding inside a row */
+    --rct-radius: 35px;
+    /* modern only | border-radius on rows/arrow hit-area */
+    --rct-arrow-size: 10px;
+    /* modern only | chevron icon size */
+    --rct-arrow-container-size: 16px;
+    /* modern only | clickable hit-area around chevron */
+    --rct-arrow-padding: 6px;
+    /* modern only */
+    --rct-bar-offset: 6px;
+    /* modern only | vertical inset of the accent bar on selected rows */
+    --rct-bar-width: 4px;
+    /* modern only | width of that accent bar */
+    --rct-bar-color: #ff5c00;
+    /* modern only | color of that accent bar */
+    --rct-focus-outline: #ff5c00;
+    /* modern only | keyboard focus-visible outline color */
+    --rct-cursor: pointer;
+    /* modern only | cursor over a row */
+}
+
+/* ========================================================================
+   STRUCTURAL CLASSES (not variables — these need direct property overrides)
+   ======================================================================== */
+
+/* The whole tree's outer <ul>/<div> wrapper */
+.explorer-panel .rct-tree-root {
+    font-family: inherit;
+    /* default: sans-serif */
+    padding: 4px 0;
+}
+
+/* Added to root when the tree container itself has DOM focus */
+.explorer-panel .rct-tree-root-focus {
+    /* outline: 1px solid var(--rct-color-tree-focus-outline); (base default) */
+}
+
+/* Each <li> row wrapper */
+.explorer-panel .rct-tree-item-li {
+    font-size: 0.8rem;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Wraps the row's title + arrow; controls left indent for nesting */
+.explorer-panel .rct-tree-item-title-container {
+    padding-left: var(--depthOffset, 0px);
+}
+
+/* Added to the title container when the row is selected */
+.explorer-panel .rct-tree-item-title-container-selected {
+    /* background-color / color driven by the --rct-color-*focustree-item-selected-* vars above */
+}
+
+/* Added to the title container when the row is being dragged over */
+.explorer-panel .rct-tree-item-title-container-dragging-over {
+    /* background-color / color driven by --rct-color-focustree-item-draggingover-* vars */
+}
+
+/* The clickable row itself: icon+label live inside this */
+.explorer-panel .rct-tree-item-button {
+    font-size: inherit;
+    color: #d4d4d4;
+    /* default: inherit — this is your default (non-selected) text color */
+    height: var(--rct-item-height);
+}
+
+.explorer-panel .rct-tree-item-button:hover {
+    /* background-color / color driven by --rct-color-focustree-item-hover-* vars (modern.css only) */
+}
+
+.explorer-panel .rct-tree-item-button:active {
+    /* background-color / color driven by --rct-color-focustree-item-active-* vars (modern.css only) */
+}
+
+.explorer-panel .rct-tree-item-button:focus-visible {
+    /* outline: 2px solid var(--rct-focus-outline); (modern.css default) */
+}
+
+/* Italicized label when it matches an active search */
+.explorer-panel .rct-tree-item-button-search-match {
+    font-style: italic;
+}
+
+/* The highlighted substring within a search match */
+.explorer-panel .rct-tree-item-search-highlight {
+    /* background-color driven by --rct-color-search-highlight-bg */
+}
+
+/* --- Arrow / chevron (the thing from your last screenshot) ------------ */
+
+.explorer-panel .rct-tree-item-arrow {
+    width: var(--rct-arrow-container-size);
+    /* modern.css: 16px | base css: 10px */
+}
+
+.explorer-panel .rct-tree-item-arrow svg {
+    width: var(--rct-arrow-size);
+    /* modern.css: 10px */
+}
+
+.explorer-panel .rct-tree-item-arrow-path {
+    fill: var(--rct-color-arrow);
+    /* this is what actually paints the chevron */
+}
+
+/* only present on folders (files render no arrow at all) */
+.explorer-panel .rct-tree-item-arrow-isFolder:hover {
+    /* background-color driven by --rct-color-focustree-item-hover-* (modern.css only) */
+}
+
+/* only present on folders that are currently expanded */
+.explorer-panel .rct-tree-item-arrow-expanded .rct-tree-item-arrow-path {
+    /* no default rule — free to add your own, e.g. a different color when open */
+}
+
+/* --- Rename mode -------------------------------------------------------- */
+
+.explorer-panel .rct-tree-item-renaming-form {
+    display: flex;
+}
+
+.explorer-panel .rct-tree-item-renaming-input {
+    background-color: inherit;
+    color: inherit;
+}
+
+.explorer-panel .rct-tree-item-renaming-submit-button {
+    border-radius: 999px;
+    /* colors driven by --rct-color-renaming-input-submitbutton-* vars */
+}
+
+/* --- Drag & drop indicator line ----------------------------------------- */
+
+.explorer-panel .rct-tree-drag-between-line {
+    height: 4px;
+    /* modern.css default: 3px | base: 4px */
+    border-radius: 99px;
+    /* modern.css only */
+    /* background-color driven by --rct-color-drag-between-line-bg */
+}
+
+/* --- Search box (only relevant if you render the built-in search input) - */
+
+.explorer-panel .rct-tree-search-input-container {
+    width: var(--rct-search-container-width);
+}
+
+.explorer-panel .rct-tree-search-input {
+    border: 1px solid var(--rct-search-border);
+    border-bottom: 2px solid var(--rct-search-border-bottom);
+    background-color: var(--rct-search-bg);
+    color: var(--rct-search-text);
+}

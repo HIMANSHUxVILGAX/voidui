@@ -1,0 +1,42 @@
+appId: com.noash.studio
+productName: NO-ASH Studio
+copyright: Copyright © 2026 NO-ASH Enterprise Security
+directories:
+  output: dist
+  buildResources: resources
+npmRebuild: false
+
+files:
+  - 'out/**/*'
+  - '!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}'
+  - '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}'
+
+extraResources:
+  - from: '../backend/dist/noash-backend'
+    to: 'bin/noash-backend'
+    filter:
+      - '**/*'
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  icon: resources/icon.ico
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: NO-ASH Studio
+  runAfterFinish: true
+
+linux:
+  target:
+    - AppImage
+    - deb
+  maintainer: NO-ASH Support <support@noash.security>
+  icon: resources/icon.png
+  category: Security
+

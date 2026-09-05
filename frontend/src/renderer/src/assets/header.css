@@ -1,0 +1,108 @@
+.header {
+          width: 100%;
+          height: 40px;
+          display: flex;
+          flex-direction: row;
+          background-color: black;
+          align-items: center;
+          justify-content: space-between;
+}
+
+.header-left {
+          width: 40%;
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+}
+
+.window-controls {
+          width: 100px;
+          background-color: rgba(59, 59, 59, 0.43);
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          height: 30px;
+          border-radius: 35px;
+}
+
+.control-btn {
+          padding: 3px;
+          width: 25px;
+          height: 25px;
+}
+
+.control-btn:hover {
+          background-color: rgba(202, 231, 235);
+          border-radius: 30px;
+          color: black;
+          cursor: pointer;
+
+}
+
+.close-btn {}
+
+.minimize-btn {}
+
+.maximize-btn {}
+
+.brand-container {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background-color: rgba(59, 59, 59, 0.43);
+          border-radius: 35px;
+          padding: 3px 10px 3px 3px;
+}
+
+.brand-logo {
+          width: 25px;
+          height: 25px;
+          margin: 0px 5px 0px 0px;
+          display: flex;
+          align-items: center;
+          background-color: rgba(202, 231, 235);
+          color: orangered;
+          border-radius: 35px;
+          font-weight: 700;
+          justify-content: center;
+}
+
+.brand-logo:hover {}
+
+.brand-title {}
+
+.brand-separator {}
+
+.header-center {
+          width: 30%;
+}
+
+.view-name {}
+
+.header-right {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background-color: rgba(59, 59, 59, 0.43);
+          border-radius: 35px;
+          padding: 3px 15px 3px 15px;
+          justify-content: space-around;
+          
+}
+
+.launcher-btn {
+          display: flex;
+          flex-direction: row;
+          margin-right:15px ;
+
+}.launcher-btn span{
+          margin-right: 5px;
+}
+
+.status-badge {}
+
+.status-dot {}
+
+.status-text {
+          color: orangered;
+}
