@@ -1,3 +1,15 @@
+from concurrent.futures import ThreadPoolExecutor
+from typing import Optional, Dict, Any, List
+from datetime import datetime
+import base64
+import subprocess
+import threading
+import platform
+import tempfile
+import shutil
+import html
+import time
+import json
 import psutil
 from app.services.service_manager import native_service_manager
 from app.services.honeypot_service import honeypot_service
@@ -24,19 +36,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import os
 import socket
+import logging
 import re
-import json
-import time
-import html
-import shutil
-import tempfile
-import platform
-import threading
-import subprocess
-import base64
-from datetime import datetime
-from typing import Optional, Dict, Any, List
-from concurrent.futures import ThreadPoolExecutor
+
+logger = logging.getLogger("void-backend")
 
 
 def _b64dec(s: str) -> str:
@@ -743,6 +746,7 @@ def execute_background_scan(scope: str = "full", custom_path: Optional[str] = No
             scan_state["is_traversing"] = False
 
 
+@app.post("/api/quark/start")
 @app.post("/api/scanner/start")
 async def start_scanner(req: Optional[StartScanRequest] = None) -> dict:
     global scan_state
@@ -768,6 +772,7 @@ async def start_scanner(req: Optional[StartScanRequest] = None) -> dict:
     return {"status": "success", "message": f"Scan initiated for target {target} [scope={scope}]", "scan_id": "scan-active-001"}
 
 
+@app.post("/api/quark/cancel")
 @app.post("/api/scanner/cancel")
 async def cancel_scanner() -> dict:
     global scan_state
@@ -779,6 +784,7 @@ async def cancel_scanner() -> dict:
     return {"status": "success", "message": "Scan cancelled by user"}
 
 
+@app.get("/api/quark/status")
 @app.get("/api/scanner/status")
 async def get_scanner_status() -> dict:
     global scan_state
@@ -803,6 +809,7 @@ async def get_scanner_status() -> dict:
             }
 
 
+@app.get("/api/quark/report")
 @app.get("/api/scanner/report")
 async def get_ai_report() -> dict:
     global scan_state
@@ -1245,21 +1252,25 @@ class BlockIpRequest(BaseModel):
     ip: str
 
 
+@app.get("/api/optics/status")
 @app.get("/api/honeypot/status")
 async def get_honeypot_status() -> dict:
     return honeypot_service.get_status()
 
 
+@app.post("/api/optics/start")
 @app.post("/api/honeypot/start")
 async def start_honeypot() -> dict:
     return honeypot_service.start_daemon()
 
 
+@app.post("/api/optics/stop")
 @app.post("/api/honeypot/stop")
 async def stop_honeypot() -> dict:
     return honeypot_service.stop_daemon()
 
 
+@app.get("/api/optics/logs")
 @app.get("/api/honeypot/logs")
 async def get_honeypot_logs() -> dict:
     return honeypot_service.get_honeypot_logs()
@@ -1270,11 +1281,13 @@ async def get_decoy_logs() -> dict:
     return honeypot_service.get_decoy_logs()
 
 
+@app.get("/api/optics/traces")
 @app.get("/api/honeypot/traces")
 async def get_web_traces() -> dict:
     return honeypot_service.get_web_traces()
 
 
+@app.get("/api/optics/decoys")
 @app.get("/api/honeypot/decoys")
 async def get_ai_decoys() -> dict:
     return honeypot_service.get_ai_decoys()
