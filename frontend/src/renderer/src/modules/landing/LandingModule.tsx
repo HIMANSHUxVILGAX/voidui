@@ -19,6 +19,18 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
   const cursorFollowerRef = useRef<HTMLDivElement>(null)
   const compassRef = useRef<HTMLDivElement>(null)
   const [activeSectionIdx, setActiveSectionIdx] = useState<number>(0)
+  const [queryText, setQueryText] = useState<string>('')
+  const [querySubmitted, setQuerySubmitted] = useState<boolean>(false)
+
+  const handleQuerySubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!queryText.trim()) return
+    setQuerySubmitted(true)
+    setTimeout(() => {
+      setQuerySubmitted(false)
+      setQueryText('')
+    }, 4000)
+  }
 
   // -------------------------------------------------------------
   // 1. THREE.JS 3D WEBGL PARTICLE SYSTEM
@@ -619,28 +631,28 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
             className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 1 ? 'nav-active' : ''
               }`}
           >
-            Arsenal
+            Usage
           </button>
           <button
             onClick={() => scrollToSection('s3')}
             className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 2 ? 'nav-active' : ''
               }`}
           >
-            Pipeline
+            Blueprint
           </button>
           <button
             onClick={() => scrollToSection('s4')}
             className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 3 ? 'nav-active' : ''
               }`}
           >
-            Telemetry
+            Developers
           </button>
           <button
             onClick={() => scrollToSection('s5')}
             className={`nav-link hidden sm:inline-flex px-3 py-1.5 rounded-full text-[13px] text-mist hover:text-bone transition-all ${activeSectionIdx === 4 ? 'nav-active' : ''
               }`}
           >
-            Modules
+            Subscription
           </button>
           <button
             onClick={() => onSwitchModule('nodes')}
@@ -726,12 +738,12 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
         <div className="relative flex flex-col gap-3.5 pr-3">
           <div className="rail-line"></div>
           {[
-            { idx: 0, label: '01 ORIGIN', id: 's1' },
-            { idx: 1, label: '02 ARSENAL', id: 's2' },
-            { idx: 2, label: '03 PIPELINE', id: 's3' },
-            { idx: 3, label: '04 TELEMETRY', id: 's4' },
-            { idx: 4, label: '05 MODULES', id: 's5' },
-            { idx: 5, label: '06 ACCESS', id: 's6' }
+            { idx: 0, label: '01 OVERVIEW', id: 's1' },
+            { idx: 1, label: '02 USAGE', id: 's2' },
+            { idx: 2, label: '03 BLUEPRINT', id: 's3' },
+            { idx: 3, label: '04 DEVELOPERS', id: 's4' },
+            { idx: 4, label: '05 SUBSCRIPTION', id: 's5' },
+            { idx: 5, label: '06 CONTACT', id: 's6' }
           ].map((item) => (
             <button
               key={item.id}
@@ -772,23 +784,23 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
 
       {/* 5. MAIN SCROLLABLE HERO & LANDING SECTIONS */}
       <main className="relative z-20 w-full select-text">
-        {/* S1: ORIGIN */}
+        {/* S1: OVERVIEW */}
         <section
           id="s1"
           className="relative min-h-screen flex flex-col justify-center items-center px-6 py-24 text-center section-container"
           data-idx="0"
         >
           <div className="section-trigger"></div>
-          <div className="max-w-4xl mx-auto origin-content mt-10">
+          <div className="max-w-5xl mx-auto origin-content mt-10">
             <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-7 flex items-center justify-center gap-3 anim-el font-semibold">
-              <span className="w-5 h-px bg-line"></span>AUTONOMOUS SECURITY RUNTIME — VOID PROTOCOL<span className="w-5 h-px bg-line"></span>
+              <span className="w-5 h-px bg-line"></span>INITIALIZING VERSION 1....VOID<span className="w-5 h-px bg-line"></span>
             </p>
             <h1 className="font-display text-[44px] sm:text-[68px] md:text-[84px] font-semibold tracking-[-0.04em] leading-[1.02]">
-              <div className="anim-wrap"><div className="anim-el text-bone">Anyone can write code.</div></div><br />
+              <div className="anim-wrap"><div className="anim-el text-bone">Supreme tool for a community.</div></div><br />
               <div className="anim-wrap"><div className="anim-el text-mist font-light">We forge the impenetrable void.</div></div>
             </h1>
             <p className="mt-8 max-w-2xl mx-auto text-[15px] sm:text-[17px] text-mist leading-relaxed font-light anim-el">
-              VØID Studio is an autonomous security runtime and developer workstation. We isolate vulnerabilities, synthesize real-time threat maps, and deploy self-healing sandbox environments so your systems remain untouchable.
+              VØID Studio is an autonomous sovereign engineering runtime and developer workstation. Powered by DCS collaborative space, Lumen neural synthesis, Quark zero-trust threat containment, Optics deception honeygrid, and MAG autonomous intelligence — engineered to build, audit, and fortify next-generation software.
             </p>
             <div className="mt-12 flex flex-wrap items-center justify-center gap-4 anim-el">
               <button
@@ -801,11 +813,11 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
                 onClick={() => scrollToSection('s2')}
                 className="hover-target px-5 py-3.5 text-sm text-mist hover:text-bone transition"
               >
-                Explore Arsenal ↓
+                Explore Usage ↓
               </button>
             </div>
 
-            <div className="mt-24 sm:mt-32 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 pt-8 border-t border-line/80 max-w-3xl mx-auto">
+            <div className="mt-20 sm:mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 pt-8 border-t border-line/80 max-w-3xl mx-auto">
               <div className="anim-el">
                 <div className="font-display text-2xl sm:text-3xl font-bold text-foam">0.00ms</div>
                 <div className="font-mono text-[9px] uppercase tracking-[.22em] text-dim mt-2">REAL-TIME LATENCY</div>
@@ -815,230 +827,636 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
                 <div className="font-mono text-[9px] uppercase tracking-[.22em] text-dim mt-2">SANDBOX ISOLATION</div>
               </div>
               <div className="anim-el">
-                <div className="font-display text-2xl sm:text-3xl font-bold text-bone">5+</div>
-                <div className="font-mono text-[9px] uppercase tracking-[.22em] text-dim mt-2">DEFENSE CORES</div>
+                <div className="font-display text-2xl sm:text-3xl font-bold text-foam">5/5</div>
+                <div className="font-mono text-[9px] uppercase tracking-[.22em] text-dim mt-2">DEFENSE CORES ONLINE</div>
               </div>
               <div className="anim-el">
                 <div className="font-display text-2xl sm:text-3xl font-bold text-mist">ACTIVE</div>
                 <div className="font-mono text-[9px] uppercase tracking-[.22em] text-dim mt-2">CONTAINMENT STATUS</div>
               </div>
             </div>
+
+            {/* FIVE CORE ENGINES CONTAINER (Overview Section) */}
+            <div className="mt-20 anim-el text-left">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6 pb-3 border-b border-line">
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-[.22em] text-foam font-bold">
+                    FIVE OPERATIONAL CORES
+                  </span>
+                  <h3 className="text-xl sm:text-2xl font-display font-semibold text-bone mt-1">
+                    Unified Autonomous Architecture
+                  </h3>
+                </div>
+                <div className="font-mono text-[11px] text-dim flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-foam animate-pulse"></span> ALL 5 CORES INTEGRATED
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                {/* Engine 1: DCS */}
+                <div
+                  onClick={() => onSwitchModule('nodes')}
+                  className="glass-card hover-target p-5 rounded-2xl flex flex-col justify-between cursor-pointer group hover:border-foam/50 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-xs text-foam font-bold">CORE I</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-foam"></span>
+                    </div>
+                    <div className="font-display font-bold text-xl text-bone group-hover:text-foam transition">DCS</div>
+                    <div className="font-mono text-[10px] text-mist mt-1">developer's colabrative space</div>
+                    <p className="mt-3 text-[12px] text-dim leading-relaxed font-light">
+                      Visual logic node canvas, real-time shared buffer, and zero-trust collaborative coding.
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-foam font-medium">
+                    <span>Launch Space</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+
+                {/* Engine 2: Lumen */}
+                <div
+                  onClick={() => onSwitchModule('ide')}
+                  className="glass-card hover-target p-5 rounded-2xl flex flex-col justify-between cursor-pointer group hover:border-foam/50 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-xs text-foam font-bold">CORE II</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-foam"></span>
+                    </div>
+                    <div className="font-display font-bold text-xl text-bone group-hover:text-foam transition">lumen</div>
+                    <div className="font-mono text-[10px] text-mist mt-1">AI Security Agent & Synthesis</div>
+                    <p className="mt-3 text-[12px] text-dim leading-relaxed font-light">
+                      Neural AST code generation, real-time vulnerability detection, and automated patch synthesis.
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-foam font-medium">
+                    <span>Launch Lumen</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+
+                {/* Engine 3: Quark */}
+                <div
+                  onClick={() => onSwitchModule('timeline')}
+                  className="glass-card hover-target p-5 rounded-2xl flex flex-col justify-between cursor-pointer group hover:border-foam/50 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-xs text-foam font-bold">CORE III</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-foam"></span>
+                    </div>
+                    <div className="font-display font-bold text-xl text-bone group-hover:text-foam transition">quark</div>
+                    <div className="font-mono text-[10px] text-mist mt-1">Real-time Threat Defense</div>
+                    <p className="mt-3 text-[12px] text-dim leading-relaxed font-light">
+                      Autonomous process memory isolation, zero-trust system lockdown, and threat mitigation.
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-foam font-medium">
+                    <span>Launch Quark</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+
+                {/* Engine 4: Optics */}
+                <div
+                  onClick={() => onSwitchModule('bento')}
+                  className="glass-card hover-target p-5 rounded-2xl flex flex-col justify-between cursor-pointer group hover:border-foam/50 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-xs text-foam font-bold">CORE IV</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-foam"></span>
+                    </div>
+                    <div className="font-display font-bold text-xl text-bone group-hover:text-foam transition">optics</div>
+                    <div className="font-mono text-[10px] text-mist mt-1">Deception HoneyGrid & Forensics</div>
+                    <p className="mt-3 text-[12px] text-dim leading-relaxed font-light">
+                      Virtual honeygrid traps, intruder manipulation, live packet telemetry, and payload dissection.
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-foam font-medium">
+                    <span>Launch Optics</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+
+                {/* Engine 5: MAG */}
+                <div
+                  onClick={() => onSwitchModule('settings')}
+                  className="glass-card hover-target p-5 rounded-2xl flex flex-col justify-between cursor-pointer group hover:border-foam/50 transition-all"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-mono text-xs text-foam font-bold">CORE V</span>
+                      <span className="w-1.5 h-1.5 rounded-full bg-foam"></span>
+                    </div>
+                    <div className="font-display font-bold text-xl text-bone group-hover:text-foam transition">MAG</div>
+                    <div className="font-mono text-[10px] text-mist mt-1">Mentor & Architectural Guide</div>
+                    <p className="mt-3 text-[12px] text-dim leading-relaxed font-light">
+                      Intelligent cyber mentor, deep system reconnaissance, dependency auditing, and setup guidance.
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-line flex items-center justify-between text-[11px] text-foam font-medium">
+                    <span>Launch MAG</span>
+                    <span className="group-hover:translate-x-1 transition-transform">→</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* S2: ARSENAL (PRACTICE) */}
+        {/* S2: USAGE */}
         <section
           id="s2"
-          className="relative min-h-screen flex items-center justify-center px-6 py-28 section-container"
+          className="relative min-h-screen flex flex-col justify-center items-center px-6 py-28 section-container"
           data-idx="1"
         >
           <div className="section-trigger"></div>
-          <div className="max-w-6xl mx-auto w-full relative h-[80vh]">
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20 pointer-events-none practice-content">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="text-center max-w-3xl mx-auto mb-16">
               <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-3 flex items-center justify-center gap-2 anim-el font-semibold">
-                <span className="w-4 h-px bg-line"></span>INTEGRATED ARSENAL<span className="w-4 h-px bg-line"></span>
+                <span className="w-4 h-px bg-line"></span>OPERATIONAL RUNTIME — USAGE & WORKFLOW<span className="w-4 h-px bg-line"></span>
               </p>
               <h2 className="font-display text-3xl sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.08]">
-                <div className="anim-wrap"><div className="anim-el text-bone">Four Core Engines.</div></div><br />
-                <div className="anim-wrap"><div className="anim-el text-mist font-light">One Autonomous Defense Architecture.</div></div>
+                <div className="anim-wrap"><div className="anim-el text-bone">How to use VØID.</div></div><br />
+                <div className="anim-wrap"><div className="anim-el text-mist font-light">From code creation to continuous containment.</div></div>
               </h2>
-              <p className="mt-6 text-[15px] text-mist leading-relaxed font-light max-w-md anim-el">
-                No module operates in isolation. Each component is wired directly into the VØID neural telemetry bus for instant synchronization and threat response.
+              <p className="mt-6 text-[15px] text-mist leading-relaxed font-light max-w-2xl mx-auto anim-el">
+                Engineered for independent developers, security researchers, red & blue cyber operators, and students. Experience seamless workflow between software building and real-time defense.
               </p>
             </div>
 
-            <div className="disc-label top-[12%] left-0 cursor-pointer" onClick={() => onSwitchModule('nodes')}>
-              <div className="disc-num mb-1 text-foam">I</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">DCS</div>
-              <div className="disc-sub mt-1 text-dim">developer's colabrative space</div>
+            {/* Who is it for? */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12 anim-el">
+              <div className="glass-card p-5 rounded-2xl border-white/10 hover:border-foam/30 transition">
+                <div className="font-mono text-[10px] text-foam font-bold uppercase tracking-wider mb-2">FOR DEVELOPERS</div>
+                <h4 className="font-display text-base font-bold text-bone">Zero-Trust Coding</h4>
+                <p className="text-[12px] text-dim leading-relaxed mt-2 font-light">
+                  Write and compile in an isolated sandbox with instant terminal execution and local AST safety checks.
+                </p>
+              </div>
+              <div className="glass-card p-5 rounded-2xl border-white/10 hover:border-foam/30 transition">
+                <div className="font-mono text-[10px] text-foam font-bold uppercase tracking-wider mb-2">FOR RESEARCHERS</div>
+                <h4 className="font-display text-base font-bold text-bone">Vulnerability Recon</h4>
+                <p className="text-[12px] text-dim leading-relaxed mt-2 font-light">
+                  Probe source code for memory corruption, injection vectors, and extract real-time exploit signatures.
+                </p>
+              </div>
+              <div className="glass-card p-5 rounded-2xl border-white/10 hover:border-foam/30 transition">
+                <div className="font-mono text-[10px] text-foam font-bold uppercase tracking-wider mb-2">FOR RED/BLUE TEAMS</div>
+                <h4 className="font-display text-base font-bold text-bone">Honeynet Deception</h4>
+                <p className="text-[12px] text-dim leading-relaxed mt-2 font-light">
+                  Trap active network intruders in isolated honeypot decoys, dissect payloads, and block hostile IPs.
+                </p>
+              </div>
+              <div className="glass-card p-5 rounded-2xl border-white/10 hover:border-foam/30 transition">
+                <div className="font-mono text-[10px] text-foam font-bold uppercase tracking-wider mb-2">FOR STUDENTS</div>
+                <h4 className="font-display text-base font-bold text-bone">Guided Cyber Lab</h4>
+                <p className="text-[12px] text-dim leading-relaxed mt-2 font-light">
+                  Learn cybersecurity in a safe air-gapped lab with interactive mentoring and architectural guidance via MAG.
+                </p>
+              </div>
             </div>
-            <div className="disc-label bottom-[12%] left-0 cursor-pointer" onClick={() => onSwitchModule('ide')}>
-              <div className="disc-num mb-1 text-foam">II</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">lumen</div>
-              <div className="disc-sub mt-1 text-dim">AI Security Agent & Synthesis</div>
-            </div>
-            <div className="disc-label top-[12%] right-0 text-right cursor-pointer" onClick={() => onSwitchModule('timeline')}>
-              <div className="disc-num mb-1 text-foam">III</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">quark</div>
-              <div className="disc-sub mt-1 text-dim">Real-time Threat Scanner</div>
-            </div>
-            <div className="disc-label bottom-[12%] right-0 text-right cursor-pointer" onClick={() => onSwitchModule('bento')}>
-              <div className="disc-num mb-1 text-foam">IV</div>
-              <div className="font-display font-bold text-bone text-2xl sm:text-3xl hover:text-foam transition">optics</div>
-              <div className="disc-sub mt-1 text-dim">Deception HoneyGrid & Forensics</div>
+
+            {/* 5-Step Usage Pipeline */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>01</span><span>INIT</span></div>
+                  <h3 className="font-display text-lg font-bold">1. Scaffold Space</h3>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Launch DCS. Connect your local directory or begin node-based visual logic programming.</p>
+                </div>
+                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
+              </div>
+
+              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el border-foam/30 hover:border-foam/60">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[10px] text-foam mb-4"><span>02</span><span>SYNTHESIS</span></div>
+                  <h3 className="font-display text-lg font-bold text-foam">2. Neural Code</h3>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Activate Lumen AI to write routines, detect zero-day AST vulnerabilities, and apply instant patches.</p>
+                </div>
+                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-foam/90 rounded-full"></div></div>
+              </div>
+
+              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>03</span><span>REAL-TIME</span></div>
+                  <h3 className="font-display text-lg font-bold">3. Kernel Defense</h3>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Quark monitors background threads, applying instant quarantine to memory-corrupting processes.</p>
+                </div>
+                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
+              </div>
+
+              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>04</span><span>DECEPTION</span></div>
+                  <h3 className="font-display text-lg font-bold">4. Trap & Analyze</h3>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Optics intercepts hostile scans into virtual honeypots, logging attacker activity without risking host files.</p>
+                </div>
+                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
+              </div>
+
+              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
+                <div>
+                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>05</span><span>TACTICAL</span></div>
+                  <h3 className="font-display text-lg font-bold">5. Mentor Guidance</h3>
+                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Consult MAG for deep system dependency audits, security recon, and best practice remediation.</p>
+                </div>
+                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* S3: PIPELINE (METHOD) */}
+        {/* S3: BLUEPRINT */}
         <section
           id="s3"
           className="relative min-h-screen flex flex-col justify-center items-center px-6 py-28 section-container"
           data-idx="2"
         >
           <div className="section-trigger"></div>
-          <div className="max-w-6xl mx-auto w-full method-content">
-            <div className="text-center max-w-2xl mx-auto mb-16">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="text-center max-w-3xl mx-auto mb-10">
               <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-3 flex items-center justify-center gap-2 anim-el font-semibold">
-                <span className="w-4 h-px bg-line"></span>THREAT MITIGATION PIPELINE<span className="w-4 h-px bg-line"></span>
+                <span className="w-4 h-px bg-line"></span>SYSTEM ARCHITECTURE & BLUEPRINTS<span className="w-4 h-px bg-line"></span>
               </p>
               <h2 className="font-display text-3xl sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.08]">
-                <div className="anim-wrap"><div className="anim-el text-bone">From raw exploit signal</div></div><br />
-                <div className="anim-wrap"><div className="anim-el text-mist font-light">to total containment.</div></div>
+                <div className="anim-wrap"><div className="anim-el text-bone">Interactive 2D Schematics.</div></div><br />
+                <div className="anim-wrap"><div className="anim-el text-mist font-light">Mathematical proof of sovereign defense.</div></div>
               </h2>
-              <p className="mt-6 text-[15px] text-mist leading-relaxed font-light max-w-lg mx-auto anim-el">
-                Five autonomous phases continuously executing in memory to neutralize zero-day attack vectors before system compromise.
+              <p className="mt-5 text-[15px] text-dim leading-relaxed font-light max-w-xl mx-auto anim-el">
+                Deep architectural schematics of the VØID multi-engine framework. Scroll inside the blueprint container below to examine individual subsystem schematics without moving the page.
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>01</span><span>2 MS</span></div>
-                  <h3 className="font-display text-xl font-bold">Recon</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Real-time AST parsing and live process vulnerability probing across active buffers.</p>
+
+            {/* Blueprint Outer Frame with Inner Scrollable Container */}
+            <div className="glass-card rounded-3xl p-4 sm:p-7 border border-white/15 bg-black/60 backdrop-blur-2xl anim-el">
+              <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-line text-[11px] font-mono text-dim">
+                <div className="flex items-center gap-2">
+                  <span className="w-2.5 h-2.5 rounded-full bg-foam"></span>
+                  <span className="text-bone font-bold tracking-wider">BLUEPRINT DOCK // 5 SCHEMATICS LOADED</span>
                 </div>
-                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
+                <div className="flex items-center gap-4">
+                  <span>SCALE: 1:1 VECTOR</span>
+                  <span className="text-foam">↕ SCROLL INTERNALLY TO INSPECT</span>
+                </div>
               </div>
-              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>02</span><span>INSTANT</span></div>
-                  <h3 className="font-display text-xl font-bold">Isolation</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Zero-trust lockdown protocol isolates infected threads without crashing the host workspace.</p>
+
+              {/* Scrollable Container */}
+              <div
+                className="max-h-[580px] overflow-y-auto pr-3 space-y-6 blueprint-scroll-container select-text"
+                style={{ overscrollBehavior: 'contain' }}
+              >
+                {/* Blueprint 01: Core Kernel Sandbox */}
+                <div className="p-6 rounded-2xl bg-[#09090f]/90 border border-white/10 hover:border-foam/40 transition">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="font-mono text-xs text-foam font-bold tracking-wider">SCHEMATIC BP-01 // AIR-GAP RUNTIME</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">ISOLATION: L3 RING-3</span>
+                  </div>
+                  <h4 className="font-display text-xl font-bold text-bone">Core Kernel Sandbox & Process Air-Gap Topology</h4>
+                  <p className="text-[13px] text-dim mt-2 font-light">
+                    Visualizes the absolute process segregation between host operating system memory and the VØID sandboxed execution threads.
+                  </p>
+                  {/* 2D Vector Schematic */}
+                  <div className="mt-4 p-4 rounded-xl bg-black/80 border border-white/10 font-mono text-[11px] text-mist relative overflow-hidden">
+                    <div className="absolute inset-0 canvas-grid-bg opacity-40"></div>
+                    <div className="relative z-10 space-y-3">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-foam">HOST OS RING-0</span>
+                        <span className="text-dim">eBPF MONITOR ACTIVE</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center my-3">
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">V8 RUNTIME</div>
+                          <div className="text-[10px] text-dim mt-1">Air-Gapped Memory</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-foam/10 border border-foam/30">
+                          <div className="text-foam font-bold text-xs">IPC BRIDGE</div>
+                          <div className="text-[10px] text-foam/80 mt-1">Zero-Trust Bus</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">THREAD QUARANTINE</div>
+                          <div className="text-[10px] text-dim mt-1">&lt;50ms Lockdown</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-dim pt-2 border-t border-white/5">
+                        <span>DATAFLOW: ONE-WAY ENCRYPTED SOCKET</span>
+                        <span className="text-foam font-bold">STATE: SECURE AIR-GAP</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
-              </div>
-              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el border-foam/30 hover:border-foam/60">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[10px] text-foam mb-4"><span>03</span><span>REAL-TIME</span></div>
-                  <h3 className="font-display text-xl font-bold text-foam">Synthesis</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">lumen neural core generates patched routines and verified exploit signatures.</p>
+
+                {/* Blueprint 02: Lumen Neural Synthesis */}
+                <div className="p-6 rounded-2xl bg-[#09090f]/90 border border-white/10 hover:border-foam/40 transition">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="font-mono text-xs text-foam font-bold tracking-wider">SCHEMATIC BP-02 // NEURAL SYNTHESIS</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">LATENCY: 22MS AST</span>
+                  </div>
+                  <h4 className="font-display text-xl font-bold text-bone">Lumen Neural AST Parser & Security Synthesis Engine</h4>
+                  <p className="text-[13px] text-dim mt-2 font-light">
+                    Real-time tokenized abstract syntax tree analysis pipeline that discovers logic flaws and synthesizes verified exploit mitigations.
+                  </p>
+                  <div className="mt-4 p-4 rounded-xl bg-black/80 border border-white/10 font-mono text-[11px] text-mist relative overflow-hidden">
+                    <div className="absolute inset-0 canvas-grid-bg opacity-40"></div>
+                    <div className="relative z-10 space-y-3">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-foam">RAW CODE STREAM</span>
+                        <span className="text-dim">TOKENIZER BUFFER</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-center my-3">
+                        <div className="p-2 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone text-[11px] font-bold">LEXER</div>
+                          <div className="text-[9px] text-dim">Tokens</div>
+                        </div>
+                        <div className="p-2 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone text-[11px] font-bold">AST GRAPH</div>
+                          <div className="text-[9px] text-dim">Syntax Tree</div>
+                        </div>
+                        <div className="p-2 rounded bg-foam/10 border border-foam/30">
+                          <div className="text-foam text-[11px] font-bold">AI AUDIT</div>
+                          <div className="text-[9px] text-foam/80">Neural Model</div>
+                        </div>
+                        <div className="p-2 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone text-[11px] font-bold">PATCH CODE</div>
+                          <div className="text-[9px] text-dim">Hot Reload</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-dim pt-2 border-t border-white/5">
+                        <span>MODEL EXECUTION: LOCAL EMBEDDED</span>
+                        <span className="text-foam font-bold">ACCURACY: 99.98%</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-foam/90 rounded-full"></div></div>
-              </div>
-              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>04</span><span>ACTIVE</span></div>
-                  <h3 className="font-display text-xl font-bold">Deception</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">optics traps redirect attacker payloads into virtual honeypot honeynets.</p>
+
+                {/* Blueprint 03: Quark Kernel Memory Shield */}
+                <div className="p-6 rounded-2xl bg-[#09090f]/90 border border-white/10 hover:border-foam/40 transition">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="font-mono text-xs text-foam font-bold tracking-wider">SCHEMATIC BP-03 // THREAT MITIGATION</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">PROTECTION: MEMORY-LOCK</span>
+                  </div>
+                  <h4 className="font-display text-xl font-bold text-bone">Quark Zero-Trust Memory Isolation Circuit</h4>
+                  <p className="text-[13px] text-dim mt-2 font-light">
+                    Background behavioral watcher intercepting buffer overflow attempts, suspicious shell forks, and unauthorized system calls.
+                  </p>
+                  <div className="mt-4 p-4 rounded-xl bg-black/80 border border-white/10 font-mono text-[11px] text-mist relative overflow-hidden">
+                    <div className="absolute inset-0 canvas-grid-bg opacity-40"></div>
+                    <div className="relative z-10 space-y-3">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-foam">PROCESS HEURISTICS</span>
+                        <span className="text-dim">ANOMALY DETECTOR</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center my-3">
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">MEMORY BUFFER</div>
+                          <div className="text-[10px] text-dim mt-1">Bounds Check</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-foam/10 border border-foam/30">
+                          <div className="text-foam font-bold text-xs">LOCKDOWN TRIGGER</div>
+                          <div className="text-[10px] text-foam/80 mt-1">Zero-Trust Halt</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">THREAD QUARANTINE</div>
+                          <div className="text-[10px] text-dim mt-1">Host Shielded</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-dim pt-2 border-t border-white/5">
+                        <span>REACTION TIME: 0.02ms</span>
+                        <span className="text-foam font-bold">CONTAINMENT: 100% ISOLATED</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
-              </div>
-              <div className="glass-card hover-target p-6 rounded-3xl flex flex-col justify-between min-h-[260px] anim-el">
-                <div>
-                  <div className="flex items-center justify-between font-mono text-[10px] text-mist mb-4"><span>05</span><span>PERMANENT</span></div>
-                  <h3 className="font-display text-xl font-bold">Immunity</h3>
-                  <p className="mt-3 text-[13px] text-dim leading-relaxed font-light">Deploy immutable AST security patches and memory hardening with zero downtime.</p>
+
+                {/* Blueprint 04: Optics Virtual HoneyGrid */}
+                <div className="p-6 rounded-2xl bg-[#09090f]/90 border border-white/10 hover:border-foam/40 transition">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="font-mono text-xs text-foam font-bold tracking-wider">SCHEMATIC BP-04 // HONEYGRID MATRIX</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">DECEPTION: ACTIVE DECOY</span>
+                  </div>
+                  <h4 className="font-display text-xl font-bold text-bone">Optics Virtual HoneyGrid & Deception Routing Map</h4>
+                  <p className="text-[13px] text-dim mt-2 font-light">
+                    Dynamically binds synthetic daemon ports to attract, trap, and manipulate unauthorized threat actors into simulated sandbox jails.
+                  </p>
+                  <div className="mt-4 p-4 rounded-xl bg-black/80 border border-white/10 font-mono text-[11px] text-mist relative overflow-hidden">
+                    <div className="absolute inset-0 canvas-grid-bg opacity-40"></div>
+                    <div className="relative z-10 space-y-3">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-foam">INBOUND HOSTILE PROBE</span>
+                        <span className="text-dim">DECOY ROUTING</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center my-3">
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">VIRTUAL PORTS</div>
+                          <div className="text-[10px] text-dim mt-1">21, 22, 80, 8080</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-foam/10 border border-foam/30">
+                          <div className="text-foam font-bold text-xs">HONEYPOT JAIL</div>
+                          <div className="text-[10px] text-foam/80 mt-1">Simulated FS</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">FORENSIC LOGGER</div>
+                          <div className="text-[10px] text-dim mt-1">PCAP Extraction</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-dim pt-2 border-t border-white/5">
+                        <span>DISRUPTION TO HOST WORKSPACE: 0.00%</span>
+                        <span className="text-foam font-bold">MANIPULATION: ENABLED</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div className="w-full h-[3px] bg-line rounded-full mt-6"><div className="w-full h-full bg-mist/50 rounded-full"></div></div>
+
+                {/* Blueprint 05: MAG Intelligent Recon Fabric */}
+                <div className="p-6 rounded-2xl bg-[#09090f]/90 border border-white/10 hover:border-foam/40 transition">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <span className="font-mono text-xs text-foam font-bold tracking-wider">SCHEMATIC BP-05 // ADVISORY FABRIC</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">RECON: FULL SYSTEM</span>
+                  </div>
+                  <h4 className="font-display text-xl font-bold text-bone">MAG Intelligent Recon & Architectural Guidance</h4>
+                  <p className="text-[13px] text-dim mt-2 font-light">
+                    Cross-system dependency auditing, CVE vulnerability mapping, and automated guidance for secure systems architecture.
+                  </p>
+                  <div className="mt-4 p-4 rounded-xl bg-black/80 border border-white/10 font-mono text-[11px] text-mist relative overflow-hidden">
+                    <div className="absolute inset-0 canvas-grid-bg opacity-40"></div>
+                    <div className="relative z-10 space-y-3">
+                      <div className="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span className="text-foam">LOCAL WORKSPACE AUDIT</span>
+                        <span className="text-dim">GUIDANCE SYNTHESIS</span>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center my-3">
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">DEPENDENCY GRAPH</div>
+                          <div className="text-[10px] text-dim mt-1">Package Audit</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-foam/10 border border-foam/30">
+                          <div className="text-foam font-bold text-xs">CVE DATABASE</div>
+                          <div className="text-[10px] text-foam/80 mt-1">Local Heuristics</div>
+                        </div>
+                        <div className="p-2.5 rounded bg-white/5 border border-white/10">
+                          <div className="text-bone font-bold text-xs">AI MENTOR</div>
+                          <div className="text-[10px] text-dim mt-1">Hardening Steps</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px] text-dim pt-2 border-t border-white/5">
+                        <span>ACCURACY: MATHEMATICALLY VERIFIED</span>
+                        <span className="text-foam font-bold">SCOPE: UNRESTRICTED</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* S4: TELEMETRY (EVIDENCE) */}
+        {/* S4: DEVELOPERS */}
         <section
           id="s4"
-          className="relative min-h-screen flex items-center px-6 py-28 pointer-events-none section-container"
+          className="relative min-h-screen flex flex-col justify-center items-center px-6 py-28 section-container"
           data-idx="3"
         >
           <div className="section-trigger"></div>
-          <div className="max-w-6xl mx-auto w-full grid grid-cols-1 lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-20 items-center evidence-content pointer-events-auto">
-            <div>
-              <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-3 flex items-center gap-2 anim-el font-semibold">
-                <span className="w-4 h-px bg-line"></span>SECURITY TELEMETRY
-              </p>
-              <h2 className="font-display text-4xl sm:text-[60px] font-semibold tracking-[-0.04em] leading-[1.02]">
-                <div className="anim-wrap"><div className="anim-el text-bone">Resilience has</div></div><br />
-                <div className="anim-wrap"><div className="anim-el text-mist font-light">a mathematical proof.</div></div>
-              </h2>
-              <p className="mt-6 text-[15px] text-dim leading-relaxed font-light max-w-md anim-el">
-                Benchmarked against adversarial intrusion suites, automated fuzzing frameworks, and enterprise zero-day exploits.
-              </p>
-            </div>
-            <div className="glass-card rounded-3xl p-8 sm:p-10 grid grid-cols-2 gap-8 sm:gap-10 relative z-10 lg:-ml-12 anim-el hover-target">
-              <div>
-                <div className="font-display text-4xl sm:text-5xl font-bold text-bone">99.98<span className="text-foam font-light text-2xl ml-0.5">%</span></div>
-                <div className="text-sm font-semibold mt-2 text-mist">Interception Rate</div>
-                <p className="text-[12px] text-dim leading-relaxed font-light mt-2">Zero-day and malicious binary containment across tested execution vectors.</p>
-              </div>
-              <div>
-                <div className="font-display text-4xl sm:text-5xl font-bold text-bone">10<span className="text-foam font-light text-2xl ml-0.5">x</span></div>
-                <div className="text-sm font-semibold mt-2 text-mist">Faster Remediation</div>
-                <p className="text-[12px] text-dim leading-relaxed font-light mt-2">Instant sandboxed patch generation vs manual incident response workflows.</p>
-              </div>
-              <div className="col-span-2 h-px bg-line"></div>
-              <div>
-                <div className="font-display text-4xl sm:text-5xl font-bold text-bone">&lt; 50<span className="font-mono text-xs text-mist tracking-wider uppercase ml-1">ms</span></div>
-                <div className="text-sm font-semibold mt-2 text-mist">Containment Latency</div>
-                <p className="text-[12px] text-dim leading-relaxed font-light mt-2">Zero-trust process isolation from anomaly detection to lockdown.</p>
-              </div>
-              <div>
-                <div className="font-display text-4xl sm:text-5xl font-bold text-bone">100<span className="text-foam font-light text-2xl ml-0.5">%</span></div>
-                <div className="text-sm font-semibold mt-2 text-mist">Local Sandboxing</div>
-                <p className="text-[12px] text-dim leading-relaxed font-light mt-2">All code, shell commands, and threat telemetry processed in private local memory.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* S5: MODULES (IMPACT) */}
-        <section
-          id="s5"
-          className="relative min-h-screen flex flex-col justify-center items-center px-6 py-28 section-container"
-          data-idx="4"
-        >
-          <div className="section-trigger"></div>
-          <div className="max-w-5xl mx-auto w-full impact-content">
+          <div className="max-w-6xl mx-auto w-full">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-3 flex items-center justify-center gap-2 anim-el font-semibold">
-                <span className="w-4 h-px bg-line"></span>OPERATIONAL CORES<span className="w-4 h-px bg-line"></span>
+                <span className="w-4 h-px bg-line"></span>CORE PROTOCOL ARCHITECTS<span className="w-4 h-px bg-line"></span>
               </p>
               <h2 className="font-display text-3xl sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.08]">
-                <div className="anim-wrap"><div className="anim-el text-bone">Defense that operates</div></div><br />
-                <div className="anim-wrap"><div className="anim-el text-mist font-light">at machine speed.</div></div>
+                <div className="anim-wrap"><div className="anim-el text-bone">The Engineers Behind VØID.</div></div><br />
+                <div className="anim-wrap"><div className="anim-el text-mist font-light">Built by developers, for developers.</div></div>
               </h2>
               <p className="mt-6 text-[15px] text-dim leading-relaxed font-light max-w-lg mx-auto anim-el">
-                Seamlessly switch between sandboxed coding, AI synthesis, threat scanning, and deception environments.
+                Meet the systems architects, AI engineers, and security researchers maintaining the sovereign VØID runtime ecosystem.
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-              <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-8 anim-el">
+
+            {/* 4 Developer Boxes */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              {/* Dev 1 */}
+              <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-6 anim-el hover:border-foam/50 transition">
                 <div>
-                  <div className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase mb-3">CORE 01 & 02</div>
-                  <h3 className="font-display text-2xl font-bold text-bone mb-3">DCS + lumen</h3>
-                  <p className="text-[15px] leading-relaxed font-light text-mist">
-                    Write code in a zero-trust environment with aegis AI security auditing, AST static analysis, and automated vulnerability patching.
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase">ARCHITECT 01</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">CLEARANCE: LEVEL 0</span>
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-foam/10 border border-foam/30 flex items-center justify-center font-display font-bold text-lg text-foam">
+                      AM
+                    </div>
+                    <div>
+                      <h3 className="font-display text-2xl font-bold text-bone">Alex Mercer</h3>
+                      <div className="font-mono text-xs text-mist">@alex-void // Lead Kernel Architect</div>
+                    </div>
+                  </div>
+                  <p className="text-[14px] leading-relaxed font-light text-mist">
+                    Pioneered the zero-trust kernel thread sandbox, eBPF telemetry hooks, and low-latency process air-gapping powering the VØID runtime.
                   </p>
                 </div>
-                <div>
-                  <button
-                    onClick={() => onSwitchModule('nodes')}
-                    className="flex items-center gap-2 text-sm font-semibold text-foam hover:text-white transition group"
-                  >
-                    <span>Launch Code Workspace</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
+                <div className="pt-4 border-t border-line flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-dim">
+                  <div className="flex gap-2">
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Rust</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">C++</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">eBPF</span>
+                  </div>
+                  <span className="text-foam">● ACTIVE CONTRIBUTOR</span>
                 </div>
               </div>
-              <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-8 anim-el">
+
+              {/* Dev 2 */}
+              <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-6 anim-el hover:border-foam/50 transition">
                 <div>
-                  <div className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase mb-3">CORE 03 & 04</div>
-                  <h3 className="font-display text-2xl font-bold text-bone mb-3">quark + optics</h3>
-                  <p className="text-[15px] leading-relaxed font-light text-mist">
-                    Real-time intrusion detection and virtual honeypots that trap, analyze, and neutralize active network exploits and malware payloads.
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase">ARCHITECT 02</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">CLEARANCE: LEVEL 1</span>
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-foam/10 border border-foam/30 flex items-center justify-center font-display font-bold text-lg text-foam">
+                      ER
+                    </div>
+                    <div>
+                      <h3 className="font-display text-2xl font-bold text-bone">Elena Rostova</h3>
+                      <div className="font-mono text-xs text-mist">@elena-neural // Head of AI Synthesis</div>
+                    </div>
+                  </div>
+                  <p className="text-[14px] leading-relaxed font-light text-mist">
+                    Designed Lumen's generative AST code transformer, automated vulnerability mitigation model, and real-time security inference pipeline.
                   </p>
                 </div>
+                <div className="pt-4 border-t border-line flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-dim">
+                  <div className="flex gap-2">
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">PyTorch</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">AST Graph</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">TypeScript</span>
+                  </div>
+                  <span className="text-foam">● ACTIVE CONTRIBUTOR</span>
+                </div>
+              </div>
+
+              {/* Dev 3 */}
+              <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-6 anim-el hover:border-foam/50 transition">
                 <div>
-                  <button
-                    onClick={() => onSwitchModule('timeline')}
-                    className="flex items-center gap-2 text-sm font-semibold text-foam hover:text-white transition group"
-                  >
-                    <span>Open Threat Matrix</span>
-                    <span className="group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase">ARCHITECT 03</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">CLEARANCE: LEVEL 1</span>
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-foam/10 border border-foam/30 flex items-center justify-center font-display font-bold text-lg text-foam">
+                      KV
+                    </div>
+                    <div>
+                      <h3 className="font-display text-2xl font-bold text-bone">Kaelen Vance</h3>
+                      <div className="font-mono text-xs text-mist">@kaelen-optics // Offensive Deception Ops</div>
+                    </div>
+                  </div>
+                  <p className="text-[14px] leading-relaxed font-light text-mist">
+                    Engineered Optics virtual honeypots, automated payload capture mechanisms, and interactive intruder deception terminals.
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-line flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-dim">
+                  <div className="flex gap-2">
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Go</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Packet PCAP</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Honeynets</span>
+                  </div>
+                  <span className="text-foam">● ACTIVE CONTRIBUTOR</span>
+                </div>
+              </div>
+
+              {/* Dev 4 */}
+              <div className="glass-card hover-target p-8 sm:p-10 rounded-3xl flex flex-col justify-between gap-6 anim-el hover:border-foam/50 transition">
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="font-mono text-[11px] text-foam font-bold tracking-widest uppercase">ARCHITECT 04</span>
+                    <span className="font-mono text-[10px] text-dim bg-white/5 px-2.5 py-1 rounded">CLEARANCE: LEVEL 1</span>
+                  </div>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 rounded-2xl bg-foam/10 border border-foam/30 flex items-center justify-center font-display font-bold text-lg text-foam">
+                      ST
+                    </div>
+                    <div>
+                      <h3 className="font-display text-2xl font-bold text-bone">Sora Takanashi</h3>
+                      <div className="font-mono text-xs text-mist">@sora-sec // Zero-Trust Protocol Lead</div>
+                    </div>
+                  </div>
+                  <p className="text-[14px] leading-relaxed font-light text-mist">
+                    Architected Quark's real-time threat heuristics, cross-core encrypted telemetry fabric, and cryptographic workspace validation.
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-line flex flex-wrap items-center justify-between gap-2 text-xs font-mono text-dim">
+                  <div className="flex gap-2">
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Crypto</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Node.js</span>
+                    <span className="px-2 py-0.5 rounded bg-white/5 text-bone">Auditing</span>
+                  </div>
+                  <span className="text-foam">● ACTIVE CONTRIBUTOR</span>
                 </div>
               </div>
             </div>
+
             <div className="pt-10 border-t border-line/60 flex flex-wrap items-center justify-center gap-8 sm:gap-12 font-mono text-[11px] uppercase tracking-[.25em] text-dim anim-el">
               <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('nodes')}>DCS</span>
               <span className="hover:text-foam transition hover-target cursor-pointer" onClick={() => onSwitchModule('ide')}>LUMEN</span>
@@ -1049,7 +1467,193 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
           </div>
         </section>
 
-        {/* S6: ACCESS & FOOTER */}
+        {/* S5: SUBSCRIPTION */}
+        <section
+          id="s5"
+          className="relative min-h-screen flex flex-col justify-center items-center px-6 py-28 section-container"
+          data-idx="4"
+        >
+          <div className="section-trigger"></div>
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-3 flex items-center justify-center gap-2 anim-el font-semibold">
+                <span className="w-4 h-px bg-line"></span>STATION ACCESS & TIERS<span className="w-4 h-px bg-line"></span>
+              </p>
+              <h2 className="font-display text-3xl sm:text-[52px] font-semibold tracking-[-0.03em] leading-[1.08]">
+                <div className="anim-wrap"><div className="anim-el text-bone">Transparent Access.</div></div><br />
+                <div className="anim-wrap"><div className="anim-el text-mist font-light">Engineered for individual and team scale.</div></div>
+              </h2>
+              <p className="mt-6 text-[15px] text-dim leading-relaxed font-light max-w-lg mx-auto anim-el">
+                Deploy the sovereign runtime model suited for your security and engineering requirements.
+              </p>
+            </div>
+
+            {/* 4 Subscription Packs Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Pack 1: Student */}
+              <div className="glass-card hover-target p-7 rounded-3xl flex flex-col justify-between border-white/10 hover:border-foam/30 transition anim-el">
+                <div>
+                  <span className="font-mono text-[10px] text-mist font-bold uppercase tracking-widest bg-white/5 px-2.5 py-1 rounded">
+                    STUDENT PASS
+                  </span>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="font-display text-4xl font-bold text-bone">$0</span>
+                    <span className="text-xs text-dim font-mono">/ FOREVER</span>
+                  </div>
+                  <p className="text-[13px] text-mist mt-3 font-light leading-relaxed">
+                    Essential toolset for students, cybersecurity learners, and open-source hobbyists.
+                  </p>
+                  <ul className="mt-6 space-y-2.5 text-[12px] text-dim font-light">
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> DCS Visual Node Canvas
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> 50 Lumen AI queries / day
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Local Quark dependency scanner
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-dim">✕</span> Live HoneyGrid Deception
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-dim">✕</span> Air-gapped offline team sync
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  onClick={() => onSwitchModule('nodes')}
+                  className="mt-8 w-full py-3 rounded-full bg-white/5 border border-white/10 hover:border-foam/40 hover:bg-white/10 text-xs font-bold text-bone transition"
+                >
+                  Start Free
+                </button>
+              </div>
+
+              {/* Pack 2: Monthly Pro */}
+              <div className="glass-card hover-target p-7 rounded-3xl flex flex-col justify-between border-white/10 hover:border-foam/30 transition anim-el">
+                <div>
+                  <span className="font-mono text-[10px] text-foam font-bold uppercase tracking-widest bg-foam/10 px-2.5 py-1 rounded">
+                    MONTHLY PRO
+                  </span>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="font-display text-4xl font-bold text-bone">$29</span>
+                    <span className="text-xs text-dim font-mono">/ MONTH</span>
+                  </div>
+                  <p className="text-[13px] text-mist mt-3 font-light leading-relaxed">
+                    Full sovereign runtime access for professional developers and solo security researchers.
+                  </p>
+                  <ul className="mt-6 space-y-2.5 text-[12px] text-dim font-light">
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Unlimited Lumen Neural AI Synthesis
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Quark Real-time Process Lockdown
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> 2 Active Optics Decoy Honeyports
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Forensic PCAP Export
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <span className="text-dim">✕</span> Air-gapped multi-seat sync
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  onClick={() => onSwitchModule('nodes')}
+                  className="mt-8 w-full py-3 rounded-full bg-white/10 border border-white/20 hover:bg-white hover:text-space text-xs font-bold text-bone transition"
+                >
+                  Deploy Monthly Pro
+                </button>
+              </div>
+
+              {/* Pack 3: Yearly Sovereign (Featured) */}
+              <div className="glass-card hover-target p-7 rounded-3xl flex flex-col justify-between border-foam/50 bg-[#0c0c12] relative shadow-xl shadow-foam/5 transition anim-el">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-foam text-space font-mono text-[9px] font-bold tracking-widest uppercase px-3 py-1 rounded-full shadow">
+                  ★ MOST POPULAR // SAVE 20%
+                </div>
+                <div>
+                  <span className="font-mono text-[10px] text-foam font-bold uppercase tracking-widest bg-foam/15 px-2.5 py-1 rounded">
+                    YEARLY SOVEREIGN
+                  </span>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="font-display text-4xl font-bold text-foam">$24</span>
+                    <span className="text-xs text-dim font-mono">/ MONTH</span>
+                  </div>
+                  <div className="text-[11px] font-mono text-dim mt-1">$288 billed annually (2 months free)</div>
+                  <p className="text-[13px] text-mist mt-3 font-light leading-relaxed">
+                    Complete tactical cybersecurity workstation for elite security engineers and full-time developers.
+                  </p>
+                  <ul className="mt-6 space-y-2.5 text-[12px] text-dim font-light">
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> All Pro Features Included
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Unlimited Optics Virtual HoneyGrid
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Full MAG Autonomous Cyber Mentor
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Local GPU Neural Acceleration
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Air-Gap Offline License Key
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  onClick={() => onSwitchModule('nodes')}
+                  className="mt-8 w-full py-3 rounded-full bg-foam hover:bg-white text-space text-xs font-bold transition shadow-lg shadow-foam/20"
+                >
+                  Claim Sovereign Access
+                </button>
+              </div>
+
+              {/* Pack 4: Contact Vice / Enterprise */}
+              <div className="glass-card hover-target p-7 rounded-3xl flex flex-col justify-between border-white/10 hover:border-foam/30 transition anim-el">
+                <div>
+                  <span className="font-mono text-[10px] text-mist font-bold uppercase tracking-widest bg-white/5 px-2.5 py-1 rounded">
+                    CONTACT VICE
+                  </span>
+                  <div className="mt-4 flex items-baseline gap-1">
+                    <span className="font-display text-3xl sm:text-4xl font-bold text-bone">Custom</span>
+                    <span className="text-xs text-dim font-mono">/ ORG</span>
+                  </div>
+                  <p className="text-[13px] text-mist mt-3 font-light leading-relaxed">
+                    Bespoke air-gapped deployment for enterprise security teams, red/blue units, and institutions.
+                  </p>
+                  <ul className="mt-6 space-y-2.5 text-[12px] text-dim font-light">
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> 100% On-Premise Air-Gap Cluster
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Custom eBPF Kernel Hooks & Audits
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Multi-seat Shared Forensics
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> Dedicated Zero-Day Intelligence Feed
+                    </li>
+                    <li className="flex items-center gap-2 text-bone">
+                      <span className="text-foam">✓</span> 24/7 Security Engineering SLA
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  onClick={() => scrollToSection('s6')}
+                  className="mt-8 w-full py-3 rounded-full bg-white/5 border border-white/10 hover:border-foam/40 hover:bg-white/10 text-xs font-bold text-bone transition"
+                >
+                  Contact Vice →
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* S6: DIRECT TRANSMISSION & FOOTER */}
         <section
           id="s6"
           className="relative min-h-screen flex flex-col justify-between px-6 pt-28 pb-10 section-container"
@@ -1058,35 +1662,69 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
           <div className="section-trigger"></div>
           <div className="max-w-4xl mx-auto w-full text-center my-auto contact-content">
             <p className="font-mono text-[11px] uppercase tracking-[.25em] text-mist mb-4 flex items-center justify-center gap-2 anim-el font-semibold">
-              <span className="w-4 h-px bg-line"></span>STATION ACCESS<span className="w-4 h-px bg-line"></span>
+              <span className="w-4 h-px bg-line"></span>DIRECT TRANSMISSION<span className="w-4 h-px bg-line"></span>
             </p>
-            <h2 className="font-display text-5xl sm:text-[72px] md:text-[88px] font-semibold tracking-[-0.04em] leading-[1.02]">
-              <div className="anim-wrap"><div className="anim-el text-bone">Initialize Station.</div></div><br />
-              <div className="anim-wrap"><div className="anim-el font-light text-mist">Total Command.</div></div>
+            <h2 className="font-display text-4xl sm:text-[64px] md:text-[80px] font-semibold tracking-[-0.04em] leading-[1.02]">
+              <div className="anim-wrap"><div className="anim-el text-bone">Connect with VØID.</div></div><br />
+              <div className="anim-wrap"><div className="anim-el font-light text-mist">Transmit your signal.</div></div>
             </h2>
-            <p className="mt-8 text-[16px] text-dim leading-relaxed font-light max-w-lg mx-auto anim-el">
-              Ready to initiate your developer security session. Launch the sandboxed workspace or jump directly into any security core.
+            <p className="mt-6 text-[15px] sm:text-[16px] text-dim leading-relaxed font-light max-w-lg mx-auto anim-el">
+              Have a subscription inquiry, zero-day disclosure, or question for the development guild? Transmit your query directly.
             </p>
-            <div className="mt-12 max-w-xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-4 anim-el">
-              <button
-                onClick={() => onSwitchModule('nodes')}
-                className="w-full sm:w-auto hover-target flex items-center justify-center gap-2 rounded-full bg-bone px-8 py-4 text-sm font-bold text-space transition-all hover:bg-white hover:scale-105 shadow-xl shadow-bone/10"
-              >
-                Launch Workspace •
-              </button>
-              <button
-                onClick={() => onSwitchModule('timeline')}
-                className="w-full sm:w-auto hover-target flex items-center justify-center gap-2 rounded-full bg-white/5 border border-white/10 hover:border-foam/50 px-8 py-4 text-sm font-semibold text-bone transition-all hover:bg-white/10"
-              >
-                Run Security Audit
-              </button>
+
+            {/* Custom Input Bar Requested by User */}
+            <div className="mt-10 max-w-xl mx-auto anim-el">
+              <div className="font-mono text-[11px] text-foam uppercase tracking-widest mb-3 font-semibold text-left sm:text-center">
+                YOUR QUERY
+              </div>
+              <form onSubmit={handleQuerySubmit} className="relative flex items-center">
+                <input
+                  type="text"
+                  value={queryText}
+                  onChange={(e) => setQueryText(e.target.value)}
+                  placeholder="we contact you soon"
+                  className="w-full bg-black/60 border border-white/15 focus:border-foam/80 rounded-full px-6 py-4 text-sm text-bone placeholder:text-mist/50 outline-none backdrop-blur-xl transition shadow-xl hover-target pr-36"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-2 px-5 py-2.5 bg-foam hover:bg-white text-space font-bold text-xs tracking-wider uppercase rounded-full transition shadow hover:scale-105 active:scale-95"
+                >
+                  Send
+                </button>
+              </form>
+              {querySubmitted && (
+                <div className="mt-3 font-mono text-xs text-foam bg-foam/10 border border-foam/30 rounded-xl py-2 px-4 inline-block fade-in">
+                  ✓ Transmission received. We contact you soon.
+                </div>
+              )}
             </div>
-            <p className="mt-6 font-mono text-[10px] uppercase tracking-[.2em] text-dim anim-el">
-              VØID RUNTIME ENGINE &middot; ZERO-TRUST ARCHITECTURE &middot; ALL CORES ONLINE
+
+            {/* Social Handles & Contact Links */}
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-6 anim-el font-mono text-xs">
+              <div className="flex items-center gap-2 text-mist bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <span className="text-foam">GIT:</span>
+                <span className="text-bone">github.com/void-protocol</span>
+              </div>
+              <div className="flex items-center gap-2 text-mist bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <span className="text-foam">DISCORD:</span>
+                <span className="text-bone">discord.gg/void-sec</span>
+              </div>
+              <div className="flex items-center gap-2 text-mist bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <span className="text-foam">X:</span>
+                <span className="text-bone">@void_runtime</span>
+              </div>
+              <div className="flex items-center gap-2 text-mist bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <span className="text-foam">TELEGRAM:</span>
+                <span className="text-bone">t.me/void_security</span>
+              </div>
+            </div>
+
+            <p className="mt-8 font-mono text-[10px] uppercase tracking-[.2em] text-dim anim-el">
+              VØID RUNTIME ENGINE &middot; ZERO-TRUST SOVEREIGN WORKSTATION &middot; ALL CORES ONLINE
             </p>
           </div>
 
-          {/* Footer Area */}
+          {/* Footer Area with All External Links Cut Off & Re-routed to VOID */}
           <div className="max-w-6xl mx-auto w-full pt-16 mt-20 border-t border-line/50 anim-fade" id="footer-area">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-10 text-left mb-12">
               <div>
@@ -1094,43 +1732,44 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
                   <span className="opacity-70 text-foam">✦</span> VØID STUDIO
                 </div>
                 <p className="text-[13px] text-mist leading-relaxed font-light mb-4 pr-4">
-                  Next-generation cybersecurity runtime and sandboxed developer workspace.
+                  Sovereign developer workstation and autonomous cyber runtime environment.
                 </p>
                 <div className="font-mono text-[9px] uppercase tracking-widest text-foam font-bold">
-                  LOCAL ENGINE RUNNING
+                  LOCAL ENGINE AIR-GAPPED
                 </div>
               </div>
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[.2em] text-dim mb-5 font-semibold">ENGINES</div>
                 <ul className="space-y-3 text-[13px] text-mist">
-                  <li><button onClick={() => onSwitchModule('nodes')} className="hover-target hover:text-bone transition">DCS</button></li>
-                  <li><button onClick={() => onSwitchModule('ide')} className="hover-target hover:text-bone transition">lumen</button></li>
-                  <li><button onClick={() => onSwitchModule('timeline')} className="hover-target hover:text-bone transition">quark</button></li>
-                  <li><button onClick={() => onSwitchModule('bento')} className="hover-target hover:text-bone transition">optics</button></li>
+                  <li><button onClick={() => onSwitchModule('nodes')} className="hover-target hover:text-bone transition">DCS (Collaborative Space)</button></li>
+                  <li><button onClick={() => onSwitchModule('ide')} className="hover-target hover:text-bone transition">lumen (AI Security Synthesis)</button></li>
+                  <li><button onClick={() => onSwitchModule('timeline')} className="hover-target hover:text-bone transition">quark (Threat Defense)</button></li>
+                  <li><button onClick={() => onSwitchModule('bento')} className="hover-target hover:text-bone transition">optics (HoneyGrid)</button></li>
+                  <li><button onClick={() => onSwitchModule('settings')} className="hover-target hover:text-bone transition">MAG (Mentor & Guide)</button></li>
                 </ul>
               </div>
               <div>
-                <div className="font-mono text-[10px] uppercase tracking-[.2em] text-dim mb-5 font-semibold">SECURITY</div>
+                <div className="font-mono text-[10px] uppercase tracking-[.2em] text-dim mb-5 font-semibold">SECURITY CORES</div>
                 <ul className="space-y-3 text-[13px] text-mist">
-                  <li><button onClick={() => onSwitchModule('timeline')} className="hover-target hover:text-bone transition">Lockdown Protocol</button></li>
+                  <li><button onClick={() => onSwitchModule('timeline')} className="hover-target hover:text-bone transition">Process Lockdown</button></li>
                   <li><button onClick={() => onSwitchModule('settings')} className="hover-target hover:text-bone transition">Vulnerability Recon</button></li>
-                  <li><button onClick={() => onSwitchModule('bento')} className="hover-target hover:text-bone transition">Threat Map</button></li>
+                  <li><button onClick={() => onSwitchModule('bento')} className="hover-target hover:text-bone transition">Threat Deception Map</button></li>
                   <li><button onClick={() => { if (onOpenSettings) onOpenSettings() }} className="hover-target hover:text-bone transition">Access Policies</button></li>
                 </ul>
               </div>
               <div>
                 <div className="font-mono text-[10px] uppercase tracking-[.2em] text-dim mb-5 font-semibold">TELEMETRY</div>
                 <ul className="space-y-3 text-[13px] text-mist">
-                  <li><span className="text-dim">Protocol: v1.0.0</span></li>
-                  <li><span className="text-dim">Engine: Sandboxed</span></li>
-                  <li><span className="text-dim">Isolation: 100%</span></li>
-                  <li><span className="text-dim">Status: Protected</span></li>
+                  <li><span className="text-dim">Protocol: v1.0.0 (Void)</span></li>
+                  <li><span className="text-dim">Engine: 100% Sandboxed</span></li>
+                  <li><span className="text-dim">Cores: 5 / 5 Active</span></li>
+                  <li><span className="text-dim">Status: Mathematical Proof</span></li>
                 </ul>
               </div>
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-[11px] uppercase tracking-wider text-dim pt-6 border-t border-line/40">
-              <span>© 2026 VØID STUDIO — VOID</span>
-              <span>VOID RUNTIME v1.0.0</span>
+              <span>© 2026 VØID PROTOCOL STUDIO — SOVEREIGN RUNTIME</span>
+              <span>VERSION 1....VOID</span>
               <button onClick={() => scrollToSection('s1')} className="hover-target hover:text-foam transition">
                 BACK TO TOP ↑
               </button>

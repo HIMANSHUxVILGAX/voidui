@@ -247,6 +247,29 @@
   background: #d97706;
 }
 
+.blueprint-scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #deb00d rgba(20, 20, 30, 0.6);
+}
+
+.blueprint-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.blueprint-scroll-container::-webkit-scrollbar-track {
+  background: rgba(10, 10, 15, 0.8);
+  border-radius: 4px;
+}
+
+.blueprint-scroll-container::-webkit-scrollbar-thumb {
+  background: #deb00d;
+  border-radius: 4px;
+}
+
+.blueprint-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #c49a09;
+}
+
 .yellow-glow-border {
   box-shadow: 0 0 20px rgba(217, 119, 6, 0.2);
   border-color: #d97706 !important;
