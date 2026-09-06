@@ -64,7 +64,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
     const cGreyLight = new THREE.Color(0x8b9094)
     const cGreyDark = new THREE.Color(0x3a3d40)
     const cPurple = new THREE.Color(0x3b1c5a)
-    const cYellow = new THREE.Color(0xc89b3c)
+    const cYellow = new THREE.Color(0xdeb00d)
 
     const dir = new THREE.Vector3()
     function randomDir(out: THREE.Vector3) {
@@ -601,7 +601,7 @@ export const LandingModule: React.FC<LandingModuleProps> = ({
             onClick={() => scrollToSection('s1')}
             className="flex items-center gap-2 px-3 py-1.5 rounded-full text-[13px] font-medium text-bone hover:text-white transition group"
           >
-            <div className="w-8 h-8 rounded-full bg-foam text-space flex items-center justify-center font-display font-bold text-sm shadow-[0_0_15px_rgba(200,155,60,0.4)] group-hover:scale-110 transition-all duration-300">
+            <div className="w-8 h-8 rounded-full bg-foam text-space flex items-center justify-center font-display font-bold text-sm shadow-sm shadow-black/50 group-hover:scale-110 transition-all duration-300">
               V
             </div>
             <span className="tracking-widest font-bold text-[15px] font-display text-bone">VØID</span>

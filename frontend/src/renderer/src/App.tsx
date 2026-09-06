@@ -185,7 +185,7 @@ function App(): React.JSX.Element {
     }
   }
 
-    // Native Windows notification actions return through the main process.
+  // Native Windows notification actions return through the main process.
   // Route them through the same handlers as the in-app global intrusion modal.
   useEffect(() => {
     window.api?.onIntrusionAction?.(({ action, ip }) => {
@@ -348,122 +348,122 @@ function App(): React.JSX.Element {
   }
 
   return (
-    <div 
+    <div
       style={getContainerStyle()}
       className="h-screen w-screen flex flex-col overflow-hidden bg-studio-bg text-white font-sans antialiased select-none"
     >
-        {/* ----------------- FIRST TIME SEC PROTECT CONSENT MODAL ----------------- */}
-        {showConsent && (
-          <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-[#0c0c10] border border-[#c89b3c]/50 rounded-2xl p-6 shadow-[0_0_50px_rgba(0,0,0,0.9),0_0_25px_rgba(200,155,60,0.2)] font-mono text-[#e8e4dc] space-y-5">
-              <div className="flex items-center space-x-3 text-[#c89b3c] border-b border-white/10 pb-3">
-                <div className="w-8 h-8 rounded-xl bg-[#c89b3c]/10 border border-[#c89b3c]/30 flex items-center justify-center">
-                  <ShieldAlert className="w-5 h-5 text-[#c89b3c]" />
-                </div>
-                <div>
-                  <h2 className="text-sm font-bold tracking-wider uppercase font-display text-white">VØID Security Protocol</h2>
-                  <span className="text-[10px] text-[#8b9094] font-mono">ZERO-TRUST AIR-GAP RUNTIME</span>
-                </div>
+      {/* ----------------- FIRST TIME SEC PROTECT CONSENT MODAL ----------------- */}
+      {showConsent && (
+        <div className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-[#0c0c10] border border-[#deb00d]/40 rounded-2xl p-6 shadow-2xl shadow-black/90 font-mono text-[#e8e4dc] space-y-5">
+            <div className="flex items-center space-x-3 text-[#deb00d] border-b border-white/10 pb-3">
+              <div className="w-8 h-8 rounded-xl bg-[#deb00d]/10 border border-[#deb00d]/30 flex items-center justify-center">
+                <ShieldAlert className="w-5 h-5 text-[#deb00d]" />
               </div>
-
-              <p className="text-xs leading-relaxed text-[#8b9094] font-sans">
-                Welcome to <strong className="text-white">VØID Studio Workspace</strong>. To protect your host environment from malicious binaries and memory corruption, this system includes the <strong className="text-[#c89b3c]">quark Threat Defense & Sandbox Protocol</strong>.
-              </p>
-
-              <div className="bg-black/50 border border-white/10 p-3.5 rounded-xl text-[11px] leading-relaxed space-y-2 font-sans">
-                <span className="font-bold text-white block font-mono text-[10px] uppercase text-[#c89b3c]">SECURITY ASSURANCES:</span>
-                <ul className="list-disc list-inside space-y-1.5 text-[#8b9094]">
-                  <li>Automated real-time AST audits and kernel memory isolation.</li>
-                  <li>
-                    <span className="text-[#c89b3c] font-semibold">Zero-Trust Lockdown:</span> When severe anomalies are detected, the workspace isolates the offending process until resolved.
-                  </li>
-                </ul>
+              <div>
+                <h2 className="text-sm font-bold tracking-wider uppercase font-display text-white">VØID Security Protocol</h2>
+                <span className="text-[10px] text-[#8b9094] font-mono">ZERO-TRUST AIR-GAP RUNTIME</span>
               </div>
-
-              <button
-                onClick={handleAcceptConsent}
-                className="w-full py-3 bg-[#c89b3c] hover:bg-white text-black font-bold text-xs tracking-widest rounded-xl transition-all uppercase shadow-lg hover:scale-[1.02]"
-              >
-                Authorize & Enter VØID Studio
-              </button>
             </div>
+
+            <p className="text-xs leading-relaxed text-[#8b9094] font-sans">
+              Welcome to <strong className="text-white">VØID Studio Workspace</strong>. To protect your host environment from malicious binaries and memory corruption, this system includes the <strong className="text-[#deb00d]">quark Threat Defense & Sandbox Protocol</strong>.
+            </p>
+
+            <div className="bg-black/50 border border-white/10 p-3.5 rounded-xl text-[11px] leading-relaxed space-y-2 font-sans">
+              <span className="font-bold text-white block font-mono text-[10px] uppercase text-[#deb00d]">SECURITY ASSURANCES:</span>
+              <ul className="list-disc list-inside space-y-1.5 text-[#8b9094]">
+                <li>Automated real-time AST audits and kernel memory isolation.</li>
+                <li>
+                  <span className="text-[#deb00d] font-semibold">Zero-Trust Lockdown:</span> When severe anomalies are detected, the workspace isolates the offending process until resolved.
+                </li>
+              </ul>
+            </div>
+
+            <button
+              onClick={handleAcceptConsent}
+              className="w-full py-3 bg-[#deb00d] hover:bg-white text-black font-bold text-xs tracking-widest rounded-xl transition-all uppercase shadow-md shadow-black/50 hover:scale-[1.02]"
+            >
+              Authorize & Enter VØID Studio
+            </button>
           </div>
+        </div>
+      )}
+
+      {/* Master Custom Window Titlebar */}
+      {!lockdown && (
+        <Header
+          activeMod={activeMod}
+          onSwitchModule={setActiveMod}
+          onOpenSettings={() => setSettingsOpen(true)}
+        />
+      )}
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Left Activity Sidebar Navigation */}
+        {!lockdown && (
+          <WorkstationNav
+            activeMod={activeMod}
+            onSwitchModule={setActiveMod}
+            onToggleCommandPalette={() => setCommandPaletteOpen(true)}
+          />
         )}
 
-        {/* Master Custom Window Titlebar */}
-        {!lockdown && (
-          <Header
+        {/* Workstation Stage (Contains Modules 1 to 5 - Stabs) */}
+        <main
+          id="workstation-stage"
+          className={`${activeMod === 'front' && !lockdown ? 'hidden' : 'flex'
+            } flex-1 bg-black flex-col min-w-0 overflow-hidden relative`}
+        >
+          {/* Module 1: DCS */}
+          {(!lockdown && (activeMod === 'nodes' || activeMod === 'code' || activeMod === 'dcs')) && <DcsModule activeMod={activeMod} />}
+
+          {/* Module 2: lumen */}
+          {(!lockdown && (activeMod === 'ide' || activeMod === 'forge' || activeMod === 'lumen' || activeMod === 'superforge')) && <LumenModule activeMod={activeMod} />}
+
+          {/* Module 3: quark */}
+          {(activeMod === 'timeline' || activeMod === 'quark' || activeMod === 'avanger' || lockdown) && (
+            <QuarkModule
+              activeMod={activeMod}
+              lockdown={lockdown}
+              setLockdown={setLockdown}
+              onSwitchModule={setActiveMod}
+              systemAccessLevel={systemAccessLevel}
+              setSystemAccessLevel={setSystemAccessLevel}
+              customScopeFolder={customScopeFolder}
+              setCustomScopeFolder={setCustomScopeFolder}
+            />
+          )}
+
+          {/* Module 4: optics */}
+          {(!lockdown && (activeMod === 'bento' || activeMod === 'optics' || activeMod === 'elum')) && <OpticsModule activeMod={activeMod} />}
+
+          {/* Module 5: MAG */}
+          {(!lockdown && (activeMod === 'settings' || activeMod === 'finder' || activeMod === 'mag')) && <MagModule activeMod={activeMod} />}
+        </main>
+
+        {/* Front / Landing Page View */}
+        {(!lockdown && activeMod === 'front') && (
+          <LandingModule
             activeMod={activeMod}
             onSwitchModule={setActiveMod}
             onOpenSettings={() => setSettingsOpen(true)}
           />
         )}
+      </div>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex overflow-hidden relative">
-          {/* Left Activity Sidebar Navigation */}
-          {!lockdown && (
-            <WorkstationNav
-              activeMod={activeMod}
-              onSwitchModule={setActiveMod}
-              onToggleCommandPalette={() => setCommandPaletteOpen(true)}
-            />
-          )}
+      {/* Command Palette Modal */}
+      {!lockdown && (
+        <CommandPalette
+          isOpen={commandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+          onSwitchModule={setActiveMod}
+        />
+      )}
 
-          {/* Workstation Stage (Contains Modules 1 to 5 - Stabs) */}
-          <main
-            id="workstation-stage"
-            className={`${
-              activeMod === 'front' && !lockdown ? 'hidden' : 'flex'
-            } flex-1 bg-black flex-col min-w-0 overflow-hidden relative`}
-          >
-            {/* Module 1: DCS */}
-            {(!lockdown && (activeMod === 'nodes' || activeMod === 'code' || activeMod === 'dcs')) && <DcsModule activeMod={activeMod} />}
-
-            {/* Module 2: lumen */}
-            {(!lockdown && (activeMod === 'ide' || activeMod === 'forge' || activeMod === 'lumen' || activeMod === 'superforge')) && <LumenModule activeMod={activeMod} />}
-
-            {/* Module 3: quark */}
-            {(activeMod === 'timeline' || activeMod === 'quark' || activeMod === 'avanger' || lockdown) && (
-              <QuarkModule
-                activeMod={activeMod}
-                lockdown={lockdown}
-                setLockdown={setLockdown}
-                systemAccessLevel={systemAccessLevel}
-                setSystemAccessLevel={setSystemAccessLevel}
-                customScopeFolder={customScopeFolder}
-                setCustomScopeFolder={setCustomScopeFolder}
-              />
-            )}
-
-            {/* Module 4: optics */}
-            {(!lockdown && (activeMod === 'bento' || activeMod === 'optics' || activeMod === 'elum')) && <OpticsModule activeMod={activeMod} />}
-
-            {/* Module 5: MAG */}
-            {(!lockdown && (activeMod === 'settings' || activeMod === 'finder' || activeMod === 'mag')) && <MagModule activeMod={activeMod} />}
-          </main>
-
-          {/* Front / Landing Page View */}
-          {(!lockdown && activeMod === 'front') && (
-            <LandingModule
-              activeMod={activeMod}
-              onSwitchModule={setActiveMod}
-              onOpenSettings={() => setSettingsOpen(true)}
-            />
-          )}
-        </div>
-
-        {/* Command Palette Modal */}
-        {!lockdown && (
-          <CommandPalette
-            isOpen={commandPaletteOpen}
-            onClose={() => setCommandPaletteOpen(false)}
-            onSwitchModule={setActiveMod}
-          />
-        )}
-
-        {/* Global Workstation Settings Overlay Modal */}
-      <SettingsModal 
+      {/* Global Workstation Settings Overlay Modal */}
+      <SettingsModal
         isOpen={settingsOpen}
         onClose={() => setSettingsOpen(false)}
         fontSize={fontSize}
@@ -480,22 +480,22 @@ function App(): React.JSX.Element {
       />
 
       {/* Security Dependency Setup Wizard Modal */}
-        <DependencySetupModal
-          isOpen={showDepWizard}
-          toolsStatus={toolsStatus}
-          platform={toolsPlatform}
-          onClose={() => setShowDepWizard(false)}
-          onSelectLightMode={handleSelectLightMode}
-          onRecheck={checkToolsStatus}
-        />
+      <DependencySetupModal
+        isOpen={showDepWizard}
+        toolsStatus={toolsStatus}
+        platform={toolsPlatform}
+        onClose={() => setShowDepWizard(false)}
+        onSelectLightMode={handleSelectLightMode}
+        onRecheck={checkToolsStatus}
+      />
 
-        {/* System-Wide Global Intrusion Alert Overlay Modal */}
-        <GlobalIntrusionModal
-          log={globalAlertLog}
-          onSecureBlock={handleGlobalSecureBlock}
-          onViewManipulate={handleGlobalViewManipulate}
-        />
-      </div>
+      {/* System-Wide Global Intrusion Alert Overlay Modal */}
+      <GlobalIntrusionModal
+        log={globalAlertLog}
+        onSecureBlock={handleGlobalSecureBlock}
+        onViewManipulate={handleGlobalViewManipulate}
+      />
+    </div>
   )
 }
 

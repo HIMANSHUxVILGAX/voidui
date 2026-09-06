@@ -10,8 +10,9 @@ module.exports = {
         mist: '#8b9094',
         dim: '#4a4d50',
         tide: '#3b1c5a',
-        foam: '#c89b3c',
-        gold: '#c89b3c',
+        foam: '#deb00d',
+        foamDark: '#b89006',
+        gold: '#deb00d',
         line: 'rgba(255, 255, 255, 0.06)',
         studio: {
           bg: '#050507',
@@ -19,9 +20,9 @@ module.exports = {
           card: '#14141B',
           hover: '#1E1E28',
           border: '#242430',
-          yellow: '#D97706', // Dark Yellow / Gold Amber
-          yellowHover: '#B45309',
-          yellowGlow: 'rgba(217, 119, 6, 0.18)'
+          yellow: '#deb00d', // Dark Rich Yellow
+          yellowHover: '#c49a09',
+          yellowGlow: 'rgba(222, 176, 13, 0.08)'
         }
       },
       fontFamily: {

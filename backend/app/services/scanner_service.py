@@ -348,7 +348,7 @@ def run_clamav_scan(target_dir: Optional[str] = None) -> List[Dict[str, Any]]:
             ],
             capture_output=True,
             text=True,
-            timeout=600,  # 10-minute timeout for thorough unbounded scanning
+            timeout=15,  # Fast 15s timeout to prevent system hang
             shell=False
         )
 

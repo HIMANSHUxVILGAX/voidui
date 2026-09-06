@@ -2,7 +2,6 @@ import { app, shell, BrowserWindow, ipcMain, dialog, Notification, Tray, Menu } 
 import { join, dirname } from 'path'
 import { exec, spawn, ChildProcess } from 'child_process'
 import { existsSync } from 'fs'
-import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
 import * as pty from "node-pty";
 import { readdir } from "fs/promises";
@@ -57,6 +56,34 @@ async function startBackendService(): Promise<void> {
   if (alreadyRunning) {
     console.log('[Main] Backend service is already active on port 8000.')
     return
+  }
+
+  // In development mode, prioritize running the active Python backend via venv
+  const isWin = process.platform === 'win32'
+  const venvPython = isWin
+    ? join(app.getAppPath(), '..', 'backend', '.venv', 'Scripts', 'python.exe')
+    : join(app.getAppPath(), '..', 'backend', '.venv', 'bin', 'python')
+  const backendDir = join(app.getAppPath(), '..', 'backend')
+  const mainPy = join(backendDir, 'app', 'main.py')
+
+  if (!app.isPackaged && existsSync(venvPython) && existsSync(mainPy)) {
+    console.log('[Main] Launching active Python backend from venv:', venvPython)
+    try {
+      backendProcess = spawn(venvPython, ['-m', 'uvicorn', 'app.main:app', '--port', '8000'], {
+        cwd: backendDir,
+        detached: true,
+        stdio: 'ignore',
+        windowsHide: true
+      })
+      backendProcess.unref()
+      backendProcess.on('exit', (code, signal) => {
+        console.log(`[Backend exit] code=${code} signal=${signal}`)
+        backendProcess = null
+      })
+      return
+    } catch (err) {
+      console.error('[Main] Failed to launch venv Python backend:', err)
+    }
   }
 
   const backendExe = resolveBackendExecutable()
@@ -305,7 +332,7 @@ function createWindow(): void {
 
   // HMR for renderer base on electron-vite cli.
   // Load the remote URL for development or the local html file for production.
-  if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+  if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
@@ -344,7 +371,7 @@ app.whenReady().then(async () => {
 
   // Must match electron-builder.yml so Windows Action Center associates the toast
   // with the installed VOID application instead of the generic Electron runtime.
-  electronApp.setAppUserModelId('com.void.studio')
+  app.setAppUserModelId('com.void.studio')
   if (!app.isPackaged) {
     app.setAsDefaultProtocolClient('void', process.execPath, [join(__dirname, 'index.js')])
     app.setAsDefaultProtocolClient('noash', process.execPath, [join(__dirname, 'index.js')])
@@ -355,9 +382,8 @@ app.whenReady().then(async () => {
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.
-  // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
-  app.on('browser-window-created', (_, window) => {
-    optimizer.watchWindowShortcuts(window)
+  app.on('browser-window-created', () => {
+    // Custom shortcut optimizer can go here if needed
   })
 
   // Window controls for custom titlebar
@@ -476,6 +502,18 @@ app.whenReady().then(async () => {
       args: ['--background-daemon']
     })
     return app.getLoginItemSettings().openAtLogin
+  })
+
+  ipcMain.handle('open-path', async (_, targetPath: string) => {
+    try {
+      const fullPath = targetPath.startsWith('~')
+        ? join(app.getPath('home'), targetPath.slice(1))
+        : targetPath
+      return await shell.openPath(fullPath)
+    } catch (err) {
+      console.error('[Main] shell.openPath error:', err)
+      return (err as Error).message
+    }
   })
 
   // Listen for security lockdown states from React frontend

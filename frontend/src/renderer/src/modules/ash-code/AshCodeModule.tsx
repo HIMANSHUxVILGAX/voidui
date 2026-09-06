@@ -50,7 +50,7 @@ export const DcsModule: React.FC<DcsModuleProps> = ({ activeMod }) => {
 			<div className="w-64 h-full border-r border-white/10 bg-[#07070b]/90 backdrop-blur-xl flex flex-col shrink-0">
 				<div className="px-4 py-2.5 border-b border-white/10 flex items-center justify-between text-xs font-mono font-bold text-[#8b9094]">
 					<div className="flex items-center gap-2">
-						<Code className="w-3.5 h-3.5 text-[#c89b3c]" />
+						<Code className="w-3.5 h-3.5 text-[#deb00d]" />
 						<span className="text-[#e8e4dc] tracking-wider uppercase">WORKSPACE</span>
 					</div>
 					<span className="text-[9px] px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[#8b9094]">
@@ -69,7 +69,7 @@ export const DcsModule: React.FC<DcsModuleProps> = ({ activeMod }) => {
 					<div className="flex items-center space-x-1">
 						{activeFile ? (
 							<div className="flex items-center space-x-2 px-3 py-1 bg-white/5 border border-white/10 rounded-t text-xs font-mono text-[#e8e4dc] border-b-0">
-								<FileCode className="w-3.5 h-3.5 text-[#c89b3c]" />
+								<FileCode className="w-3.5 h-3.5 text-[#deb00d]" />
 								<span className="font-semibold">{activeFile.name}</span>
 								<span className="text-[9px] text-[#8b9094] uppercase ml-1">
 									[{activeFile.fileType.language}]
@@ -77,7 +77,7 @@ export const DcsModule: React.FC<DcsModuleProps> = ({ activeMod }) => {
 							</div>
 						) : (
 							<div className="flex items-center space-x-2 px-3 py-1 bg-white/5 border border-white/10 rounded-t text-xs font-mono text-[#8b9094] border-b-0">
-								<FileCode className="w-3.5 h-3.5 text-[#c89b3c]" />
+								<FileCode className="w-3.5 h-3.5 text-[#deb00d]" />
 								<span>workspace.ts (scratchpad)</span>
 							</div>
 						)}
@@ -120,7 +120,7 @@ export const DcsModule: React.FC<DcsModuleProps> = ({ activeMod }) => {
 					{/* Terminal Header Bar */}
 					<div className="h-8 px-4 bg-[#09090d] border-b border-white/5 flex items-center justify-between shrink-0 select-none">
 						<div className="flex items-center space-x-2 text-xs font-mono text-[#8b9094]">
-							<TerminalIcon className="w-3.5 h-3.5 text-[#c89b3c]" />
+							<TerminalIcon className="w-3.5 h-3.5 text-[#deb00d]" />
 							<span className="text-[#e8e4dc] font-bold text-[11px] uppercase tracking-wider">
 								DCS TERMINAL <span className="text-[#8b9094] font-normal">{'//'} LOCAL PTY</span>
 							</span>

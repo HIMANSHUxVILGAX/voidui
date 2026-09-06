@@ -23,6 +23,7 @@ from fastapi.responses import StreamingResponse, HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 import os
+import socket
 import re
 import json
 import time
@@ -31,6 +32,7 @@ import shutil
 import tempfile
 import platform
 import threading
+import subprocess
 import base64
 from datetime import datetime
 from typing import Optional, Dict, Any, List
@@ -289,7 +291,7 @@ def inspect_file_for_threats(fpath: str) -> tuple[bool, Optional[str], Optional[
         else:
             # Large File 4MB Chunk Streaming Loop (Supports 10GB+ files with 4MB max RAM)
             CHUNK_SIZE = 4 * 1024 * 1024  # 4 MB chunk
-            max_chunks_to_scan = 100      # Stream up to 400 MB of content
+            max_chunks_to_scan = 5      # Stream up to 20 MB of content to keep speed high
             with open(fpath, 'r', errors='ignore') as f:
                 chunks_scanned = 0
                 overlap = ""
@@ -383,10 +385,12 @@ def inspect_and_record_batch(fpaths: List[str], is_windows: bool):
         if len(scan_state["scanned_files"]) > _SCANNED_FILES_MAX:
             scan_state["scanned_files"] = scan_state["scanned_files"][-_SCANNED_FILES_MAX:]
 
-        # Dynamically scale progress percentage smoothly as batches are flushed
-        curr_prog = scan_state.get("progress", 5)
-        if curr_prog < 95:
-            scan_state["progress"] = min(95, curr_prog + 1)
+        # Dynamically scale progress percentage smoothly as files are processed
+        total_files = scan_state.get("total_scanned_count", 0)
+        dynamic_prog = min(
+            98, max(5, int(5 + 93 * (1 - (0.9997 ** total_files)))))
+        scan_state["progress"] = max(
+            scan_state.get("progress", 5), dynamic_prog)
 
 
 def inspect_and_record_file(fpath: str, is_windows: bool):
@@ -424,7 +428,7 @@ def run_file_traversal(scope: str = "full", custom_path: Optional[str] = None):
         return True
 
     batch_buffer: List[str] = []
-    BATCH_SIZE = 16  # Small batch size ensures instant line-by-line live console streaming
+    BATCH_SIZE = 128  # Increased batch size to improve ThreadPool concurrency speed
 
     def flush_batch():
         nonlocal batch_buffer
@@ -652,29 +656,31 @@ def execute_background_scan(scope: str = "full", custom_path: Optional[str] = No
         traversal_thread.start()
 
         if scope == "custom":
-            # Bug-1 Fix: For custom folder scans, skip system-level tools entirely
-            # (Nmap, Lynis/WinAudit, ClamAV). These are OS-wide audits irrelevant
-            # to scanning a specific user folder. Scan time now scales naturally
-            # with folder size — only the per-file content inspection runs.
-            with scan_lock:
-                scan_state["progress"] = 15
-            traversal_thread.join()  # Wait for traversal to complete — no timeout
+            # Custom folder scan: file traversal only on target folder
+            traversal_thread.join()
             with scan_lock:
                 scan_state["progress"] = 100
             print("[BackgroundScan] Custom folder scan complete — file traversal only.")
+        elif scope == "storage":
+            # Storage drives scan: inspect mounted and external media only
+            traversal_thread.join()
+            with scan_lock:
+                scan_state["progress"] = 100
+            print(
+                "[BackgroundScan] Storage drives scan complete — file traversal only.")
         else:
-            # Full / Storage scans: run system-level security tools alongside traversal
+            # Full system scan: run security tools alongside full file traversal
             nmap_results = run_nmap_scan("127.0.0.1")
             with scan_lock:
-                scan_state["progress"] = 35
+                scan_state["progress"] = max(scan_state.get("progress", 0), 25)
 
             lynis_results = run_lynis_scan()
             with scan_lock:
-                scan_state["progress"] = 65
+                scan_state["progress"] = max(scan_state.get("progress", 0), 50)
 
             clamav_results = run_clamav_scan(None)
             with scan_lock:
-                scan_state["progress"] = 85
+                scan_state["progress"] = max(scan_state.get("progress", 0), 75)
 
             all_findings = nmap_results + lynis_results + clamav_results
             with scan_lock:
@@ -682,11 +688,6 @@ def execute_background_scan(scope: str = "full", custom_path: Optional[str] = No
                     if not any(existing.get("id") == f.get("id") for existing in scan_state["findings"]):
                         scan_state["findings"].append(f)
 
-            # Bug-2 Fix: No timeout — let traversal walk ALL drives to completion.
-            # The cancel endpoint sets is_traversing=False which the traversal
-            # loop checks, so users can still abort at any time.
-            print(
-                "[BackgroundScan] Tools done. Waiting for file traversal to complete...")
             traversal_thread.join()
             with scan_lock:
                 scan_state["progress"] = 100
@@ -712,6 +713,26 @@ def execute_background_scan(scope: str = "full", custom_path: Optional[str] = No
                     "status": "clean",
                     "signature": None
                 })
+
+            # Auto-save report to disk for permanent archiving
+            try:
+                report = generate_ai_report(scan_state["findings"])
+                scan_state["last_report"] = report
+                report_dir = get_reports_directory()
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                json_filename = f"void_audit_report_{timestamp}.json"
+                json_path = os.path.join(report_dir, json_filename)
+                with open(json_path, 'w', encoding='utf-8') as f:
+                    json.dump(report, f, indent=2)
+                md_filename = f"void_audit_report_{timestamp}.md"
+                md_path = os.path.join(report_dir, md_filename)
+                with open(md_path, 'w', encoding='utf-8') as f:
+                    f.write(report.get("report_text", "Audit scan completed."))
+                print(
+                    f"[BackgroundScan] Audit report automatically saved to: {json_path}")
+            except Exception as save_err:
+                print(
+                    f"[BackgroundScan] Failed to auto-save audit report: {save_err}")
 
     except Exception as e:
         print(f"[BackgroundScan] Error running scanners: {e}")
@@ -799,60 +820,147 @@ async def get_ai_report() -> dict:
     return report
 
 
+_last_net_calc_time = 0.0
+_last_net_calc_bytes = 0
+
+
+def check_network_connectivity() -> bool:
+    """Multi-tiered real network connectivity check on Linux/Windows/macOS."""
+    # 1. Quick UDP routing test to standard public DNS (no actual packet sent over wire)
+    for target in [("1.1.1.1", 53), ("8.8.8.8", 53), ("9.9.9.9", 53)]:
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.settimeout(0.2)
+            s.connect(target)
+            s.close()
+            return True
+        except Exception:
+            continue
+
+    # 2. Check psutil net_if_stats for any non-loopback UP interface
+    try:
+        net_stats = psutil.net_if_stats()
+        for iface, stats in net_stats.items():
+            if iface != 'lo' and not iface.startswith('docker') and not iface.startswith('br-'):
+                if stats.isup:
+                    return True
+    except Exception:
+        pass
+
+    # 3. Check psutil net_if_addrs for any non-loopback interface with active IPv4 address
+    try:
+        net_addrs = psutil.net_if_addrs()
+        for iface, addrs in net_addrs.items():
+            if iface != 'lo' and not iface.startswith('docker') and not iface.startswith('br-'):
+                for addr in addrs:
+                    if addr.family == socket.AF_INET and not addr.address.startswith('127.'):
+                        return True
+    except Exception:
+        pass
+
+    # 4. Check Linux kernel routing table for default gateway (Destination 00000000)
+    try:
+        if os.path.exists('/proc/net/route'):
+            with open('/proc/net/route', 'r') as f:
+                for line in f:
+                    fields = line.strip().split()
+                    if len(fields) >= 2 and fields[1] == '00000000':
+                        return True
+    except Exception:
+        pass
+
+    # 5. Fallback TCP probe with fast timeout
+    for target in [("1.1.1.1", 53), ("8.8.8.8", 53)]:
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(0.4)
+            sock.connect(target)
+            sock.close()
+            return True
+        except Exception:
+            continue
+
+    return False
+
+
 @app.get("/api/system/metrics")
 async def get_system_metrics() -> dict:
     """Returns real live OS CPU %, RAM %, Disk %, and Network status from system."""
+    global _last_net_calc_time, _last_net_calc_bytes
     try:
         cpu = psutil.cpu_percent(interval=None)
+        cpu_cores = psutil.cpu_count(logical=True) or 4
+
         mem = psutil.virtual_memory()
+        ram_percent = round(mem.percent, 1)
+        ram_used_gb = round(mem.used / (1024 ** 3), 2)
+        ram_total_gb = round(mem.total / (1024 ** 3), 2)
 
-        # Disk usage percentage (total capacity used)
-        disk = psutil.disk_usage('/')
-        disk_percent = disk.percent
-
-        # Disk I/O activity (read/write bytes since boot)
         try:
-            disk_io = psutil.disk_io_counters()
-            disk_read_mb = round(disk_io.read_bytes /
-                                 (1024 * 1024), 1) if disk_io else 0
-            disk_write_mb = round(disk_io.write_bytes /
-                                  (1024 * 1024), 1) if disk_io else 0
+            disk = psutil.disk_usage(os.path.expanduser('~'))
+            disk_percent = round(disk.percent, 1)
+            disk_used_gb = round(disk.used / (1024 ** 3), 1)
+            disk_total_gb = round(disk.total / (1024 ** 3), 1)
         except Exception:
-            disk_read_mb = 0
-            disk_write_mb = 0
+            disk = psutil.disk_usage('/')
+            disk_percent = round(disk.percent, 1)
+            disk_used_gb = round(disk.used / (1024 ** 3), 1)
+            disk_total_gb = round(disk.total / (1024 ** 3), 1)
 
-        # Check network interface status
-        net_stats = psutil.net_if_stats()
-        is_connected = any(stats.isup for iface,
-                           stats in net_stats.items() if iface != 'lo')
+        is_connected = check_network_connectivity()
 
-        net_speed = "N/A"
-        if is_connected:
-            net_io = psutil.net_io_counters()
-            mb_traffic = round(
-                (net_io.bytes_sent + net_io.bytes_recv) / (1024 * 1024), 1)
-            net_speed = f"100% Stable | {mb_traffic} MB"
+        now = time.time()
+        net_io = psutil.net_io_counters()
+        curr_bytes = (net_io.bytes_sent + net_io.bytes_recv) if net_io else 0
+        total_mb = round(curr_bytes / (1024 * 1024), 1)
+
+        speed_str = "0.0 KB/s"
+        if _last_net_calc_time > 0 and now > _last_net_calc_time:
+            dt = now - _last_net_calc_time
+            delta_bytes = max(0, curr_bytes - _last_net_calc_bytes)
+            bps = delta_bytes / dt if dt > 0 else 0
+            if bps > 1024 * 1024:
+                speed_str = f"{bps / (1024 * 1024):.1f} MB/s"
+            else:
+                speed_str = f"{bps / 1024:.1f} KB/s"
+
+        _last_net_calc_time = now
+        _last_net_calc_bytes = curr_bytes
+
+        net_speed = f"100% Stable | {speed_str}" if is_connected else "Offline"
 
         return {
             "status": "success",
             "cpu": cpu,
-            "ram": mem.percent,
+            "cpu_cores": cpu_cores,
+            "ram": ram_percent,
+            "ram_used_gb": ram_used_gb,
+            "ram_total_gb": ram_total_gb,
             "disk": disk_percent,
-            "disk_read_mb": disk_read_mb,
-            "disk_write_mb": disk_write_mb,
+            "disk_used_gb": disk_used_gb,
+            "disk_total_gb": disk_total_gb,
             "network_connected": is_connected,
-            "network_speed": net_speed
+            "networkConnected": is_connected,
+            "network_speed": net_speed,
+            "network_rate": speed_str,
+            "network_total_mb": total_mb
         }
-    except Exception:
+    except Exception as e:
         return {
             "status": "success",
-            "cpu": 22.0,
-            "ram": 54.0,
+            "cpu": 0.0,
+            "cpu_cores": 4,
+            "ram": 0.0,
+            "ram_used_gb": 0.0,
+            "ram_total_gb": 0.0,
             "disk": 0.0,
-            "disk_read_mb": 0,
-            "disk_write_mb": 0,
+            "disk_used_gb": 0.0,
+            "disk_total_gb": 0.0,
             "network_connected": False,
-            "network_speed": "N/A"
+            "networkConnected": False,
+            "network_speed": "N/A",
+            "network_rate": "0 KB/s",
+            "network_total_mb": 0.0
         }
 
 
@@ -887,27 +995,157 @@ class SaveReportRequest(BaseModel):
     directory: str
 
 
+def get_reports_directory() -> str:
+    """Returns the path for permanent scan reports, safely falling back across candidate locations."""
+    project_root = os.path.abspath(os.path.join(
+        os.path.dirname(__file__), "..", ".."))
+    candidates = [
+        os.path.join(project_root, "reports"),
+        os.path.expanduser("~/Documents/void_reports"),
+        os.path.expanduser("~/Desktop/void_reports"),
+        "/tmp/void_reports"
+    ]
+    for d in candidates:
+        try:
+            os.makedirs(d, exist_ok=True)
+            test_file = os.path.join(d, ".write_test")
+            with open(test_file, "w") as f:
+                f.write("ok")
+            os.remove(test_file)
+            return d
+        except Exception:
+            continue
+
+    fallback = os.path.join(project_root, "reports")
+    try:
+        os.makedirs(fallback, exist_ok=True)
+    except Exception:
+        pass
+    return fallback
+
+
 @app.post("/api/scanner/save-report")
 async def save_report_endpoint(req: SaveReportRequest) -> dict:
     try:
-        os.makedirs(req.directory, exist_ok=True)
+        target_dir = req.directory.strip() if req.directory and req.directory.strip(
+        ) and req.directory != "reports" else get_reports_directory()
+        target_dir = os.path.abspath(os.path.expanduser(target_dir))
+        os.makedirs(target_dir, exist_ok=True)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
         # Save JSON Report
         json_filename = f"void_audit_report_{timestamp}.json"
-        json_path = os.path.join(req.directory, json_filename)
-        with open(json_path, 'w') as f:
+        json_path = os.path.join(target_dir, json_filename)
+        with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(req.report, f, indent=2)
 
         # Save Markdown Report
         md_filename = f"void_audit_report_{timestamp}.md"
-        md_path = os.path.join(req.directory, md_filename)
-        with open(md_path, 'w') as f:
+        md_path = os.path.join(target_dir, md_filename)
+        with open(md_path, 'w', encoding='utf-8') as f:
             f.write(req.report.get("report_text", "No details available."))
 
-        return {"status": "success", "message": f"Reports saved successfully to folder {req.directory}."}
+        return {
+            "status": "success",
+            "message": f"Reports saved successfully to folder {target_dir}.",
+            "directory": target_dir,
+            "json_path": json_path,
+            "md_path": md_path
+        }
     except Exception as e:
         return {"status": "error", "message": f"Failed to save reports: {e}"}
+
+
+@app.get("/api/scanner/past-scans")
+async def get_past_scans() -> dict:
+    """Returns a list of all historical scan audit reports saved on the user system."""
+    try:
+        report_dir = get_reports_directory()
+        if not os.path.exists(report_dir):
+            return {"status": "success", "reports_directory": report_dir, "scans": []}
+
+        scans = []
+        for fname in os.listdir(report_dir):
+            if fname.endswith(".json"):
+                fpath = os.path.join(report_dir, fname)
+                try:
+                    with open(fpath, "r", encoding="utf-8") as f:
+                        data = json.load(f)
+                    mtime = os.path.getmtime(fpath)
+                    readable_time = datetime.fromtimestamp(
+                        mtime).strftime("%Y-%m-%d %H:%M:%S")
+                    findings = data.get("findings", [])
+                    scans.append({
+                        "id": fname.replace(".json", ""),
+                        "filename": fname,
+                        "timestamp": readable_time,
+                        "mtime": mtime,
+                        "title": data.get("title", "Quark Audit Report"),
+                        "summary": data.get("summary", "Security audit scan summary"),
+                        "report_text": data.get("report_text", ""),
+                        "findings_count": len(findings),
+                        "findings": findings,
+                        "file_path": fpath
+                    })
+                except Exception:
+                    continue
+
+        # Sort newest first
+        scans.sort(key=lambda x: x["mtime"], reverse=True)
+
+        return {
+            "status": "success",
+            "reports_directory": report_dir,
+            "scans": scans
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e), "scans": []}
+
+
+@app.post("/api/scanner/open-reports-folder")
+async def open_reports_folder() -> dict:
+    """Opens the reports folder in the system file manager."""
+    try:
+        report_dir = get_reports_directory()
+        os.makedirs(report_dir, exist_ok=True)
+        if platform.system() == "Windows":
+            os.startfile(report_dir)
+        elif platform.system() == "Darwin":
+            subprocess.Popen(["open", report_dir], start_new_session=True)
+        else:
+            env = os.environ.copy()
+            if "DISPLAY" not in env:
+                env["DISPLAY"] = ":0.0"
+            if "DBUS_SESSION_BUS_ADDRESS" not in env and os.path.exists("/run/user/1000/bus"):
+                env["DBUS_SESSION_BUS_ADDRESS"] = "unix:path=/run/user/1000/bus"
+
+            commands = [
+                ["thunar", report_dir],
+                ["xdg-open", report_dir],
+                ["gio", "open", report_dir],
+                ["exo-open", "--launch", "FileManager", report_dir]
+            ]
+            opened = False
+            for cmd in commands:
+                if shutil.which(cmd[0]):
+                    try:
+                        subprocess.Popen(
+                            cmd,
+                            env=env,
+                            stdout=subprocess.DEVNULL,
+                            stderr=subprocess.DEVNULL,
+                            start_new_session=True
+                        )
+                        opened = True
+                        break
+                    except Exception as e:
+                        logger.warning(f"Failed to launch {cmd[0]}: {e}")
+                        continue
+            if not opened:
+                return {"status": "error", "message": "No suitable file manager binary found to open folder"}
+        return {"status": "success", "message": f"Opened folder: {report_dir}", "directory": report_dir}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 
 @app.post("/api/scanner/remediate")

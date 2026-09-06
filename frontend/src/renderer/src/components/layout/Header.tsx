@@ -40,7 +40,7 @@ export const Header: React.FC<HeaderProps> = ({ onSwitchModule, onOpenSettings }
           onClick={() => onSwitchModule('front')}
           className="flex items-center space-x-2 group hover:opacity-90 transition px-1.5 py-1 rounded-lg hover:bg-white/5 cursor-pointer"
         >
-          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-[#c89b3c] to-[#9a7224] text-[#050505] flex items-center justify-center font-bold text-[10px] font-mono shadow-[0_0_10px_rgba(200,155,60,0.4)]">
+          <div className="w-5 h-5 rounded-md bg-gradient-to-br from-[#deb00d] to-[#967406] text-black flex items-center justify-center font-bold text-[10px] font-mono shadow-sm shadow-black/50">
             V
           </div>
           <span className="text-xs font-mono font-bold tracking-widest text-[#e8e4dc]">
@@ -60,13 +60,13 @@ export const Header: React.FC<HeaderProps> = ({ onSwitchModule, onOpenSettings }
         <button
           onClick={onOpenSettings}
           title="Workstation Settings"
-          className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 hover:border-[#c89b3c]/60 text-[#8b9094] hover:text-[#e8e4dc] transition-all flex items-center justify-center shrink-0 cursor-pointer"
+          className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 hover:border-[#deb00d]/60 text-[#8b9094] hover:text-[#e8e4dc] transition-all flex items-center justify-center shrink-0 cursor-pointer"
         >
           <Settings className="w-3.5 h-3.5" />
         </button>
 
-        <div className="flex items-center space-x-1.5 px-2.5 py-0.5 bg-[#c89b3c]/10 border border-[#c89b3c]/30 rounded-full text-xs text-[#c89b3c] font-mono shadow-[0_0_12px_rgba(200,155,60,0.15)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#c89b3c] animate-pulse"></span>
+        <div className="flex items-center space-x-1.5 px-2.5 py-0.5 bg-[#deb00d]/10 border border-[#deb00d]/30 rounded-full text-xs text-[#deb00d] font-mono">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#deb00d]"></span>
           <span className="text-[9px] font-bold tracking-wider">ONLINE</span>
         </div>
 

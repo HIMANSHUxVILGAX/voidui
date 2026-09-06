@@ -53,10 +53,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       className="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-start justify-center pt-24 px-4"
       onClick={handleOverlayClick}
     >
-      <div className="bg-[#0c0c10]/95 border border-[#c89b3c]/50 rounded-2xl w-full max-w-lg overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.8),0_0_20px_rgba(200,155,60,0.2)] font-mono backdrop-blur-2xl">
+      <div className="bg-[#0c0c10]/95 border border-[#deb00d]/40 rounded-2xl w-full max-w-lg overflow-hidden shadow-2xl shadow-black/90 font-mono backdrop-blur-2xl">
         {/* Search Header */}
         <div className="p-4 border-b border-white/10 flex items-center space-x-3 bg-white/5">
-          <Search className="w-4 h-4 text-[#c89b3c]" />
+          <Search className="w-4 h-4 text-[#deb00d]" />
           <input
             ref={inputRef}
             type="text"
@@ -74,7 +74,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               <button
                 key={cmd.id}
                 onClick={() => handleSelect(cmd.id)}
-                className="w-full text-left px-3.5 py-2.5 text-[#e8e4dc] hover:bg-[#c89b3c] hover:text-[#050505] rounded-xl flex items-center justify-between transition-all group font-mono"
+                className="w-full text-left px-3.5 py-2.5 text-[#e8e4dc] hover:bg-[#deb00d] hover:text-[#050505] rounded-xl flex items-center justify-between transition-all group font-mono"
               >
                 <span className="group-hover:font-bold">{cmd.label}</span>
                 <span className="text-[10px] px-2 py-0.5 rounded bg-white/10 group-hover:bg-black/20 group-hover:text-black text-[#8b9094] font-bold">

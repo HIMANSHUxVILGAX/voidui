@@ -107,17 +107,17 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
     >
       {/* 1. COLLAPSED VERTICAL HANDLE ("DANTI" / STRIP) */}
       <div
-        className={`w-1.5 h-36 rounded-r-full bg-gradient-to-b from-[#c89b3c]/20 via-[#c89b3c] to-[#c89b3c]/20 shadow-[0_0_15px_rgba(200,155,60,0.8)] cursor-pointer transition-all duration-300 ${isHovered
-            ? 'opacity-0 scale-y-0 -translate-x-full pointer-events-none'
-            : 'opacity-100 scale-y-100 translate-x-0'
+        className={`w-1.5 h-36 rounded-r-full bg-gradient-to-b from-[#deb00d]/30 via-[#deb00d] to-[#deb00d]/30 shadow-sm shadow-black/80 cursor-pointer transition-all duration-300 ${isHovered
+          ? 'opacity-0 scale-y-0 -translate-x-full pointer-events-none'
+          : 'opacity-100 scale-y-100 translate-x-0'
           }`}
       />
 
       {/* 2. EXPANDED FLOATING MORPH SQUIRCLE ICONS PANEL */}
       <div
         className={`flex flex-col gap-3 items-center transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${isHovered
-            ? 'opacity-100 translate-x-3 scale-100 pointer-events-auto'
-            : 'opacity-0 -translate-x-12 scale-90 pointer-events-none'
+          ? 'opacity-100 translate-x-3 scale-100 pointer-events-auto'
+          : 'opacity-0 -translate-x-12 scale-90 pointer-events-none'
           }`}
       >
         {/* Home / Matrix Button */}
@@ -145,7 +145,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
           </button>
           {/* Tooltip on right */}
           <div className="absolute left-full ml-3 px-3 py-1.5 rounded-xl bg-[#0c0c10]/95 border border-white/10 text-white font-mono text-xs shadow-2xl whitespace-nowrap opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-all duration-200 -translate-x-2 group-hover/tip:translate-x-0 backdrop-blur-xl z-50">
-            <span className="text-[#c89b3c] font-bold mr-1">0.</span> VØID Overview
+            <span className="text-[#deb00d] font-bold mr-1">0.</span> VØID Overview
           </div>
         </div>
 
@@ -172,7 +172,7 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
               </button>
               {/* Tooltip on right */}
               <div className="absolute left-full ml-3 px-3 py-1.5 rounded-xl bg-[#0c0c10]/95 border border-white/10 text-white font-mono text-xs shadow-2xl whitespace-nowrap opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-all duration-200 -translate-x-2 group-hover/tip:translate-x-0 backdrop-blur-xl z-50">
-                <span className="text-[#c89b3c] font-bold mr-1">{idx + 1}.</span> {item.title}
+                <span className="text-[#deb00d] font-bold mr-1">{idx + 1}.</span> {item.title}
               </div>
             </div>
           )
@@ -187,14 +187,14 @@ export const WorkstationNav: React.FC<WorkstationNavProps> = ({
         <div className="relative group/tip flex items-center">
           <button
             onClick={onToggleCommandPalette}
-            className="side-icon-btn group hover-target hover:border-[#c89b3c]/60"
+            className="side-icon-btn group hover-target hover:border-[#deb00d]/60"
             title="Command Palette (Ctrl+K)"
           >
             <Search className="w-5 h-5 text-[#8b9094] group-hover:text-white transition-transform group-hover:scale-110" />
           </button>
           {/* Tooltip on right */}
           <div className="absolute left-full ml-3 px-3 py-1.5 rounded-xl bg-[#0c0c10]/95 border border-white/10 text-white font-mono text-xs shadow-2xl whitespace-nowrap opacity-0 group-hover/tip:opacity-100 pointer-events-none transition-all duration-200 -translate-x-2 group-hover/tip:translate-x-0 backdrop-blur-xl z-50">
-            <span className="text-[#c89b3c] font-bold mr-1">⌘</span> Command Palette (Ctrl+K)
+            <span className="text-[#deb00d] font-bold mr-1">⌘</span> Command Palette (Ctrl+K)
           </div>
         </div>
       </div>

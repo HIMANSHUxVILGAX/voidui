@@ -1,6 +1,6 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
 
-export {}
+export { }
 
 declare global {
   interface Window {
@@ -8,58 +8,60 @@ declare global {
 
     api: {
       onTerminalData:
-        (callback: (data: string) => void) => void
+      (callback: (data: string) => void) => void
 
       sendTerminalData:
-        (data: string) => void
+      (data: string) => void
 
       resizeTerminal:
-        (dimensions: {
-          cols: number
-          rows: number
-        }) => void
+      (dimensions: {
+        cols: number
+        rows: number
+      }) => void
 
       readDirectory:
-        (path: string) => Promise<
-          {
-            name: string
-            path: string
-            isFolder: boolean
-          }[]
-        >
+      (path: string) => Promise<
+        {
+          name: string
+          path: string
+          isFolder: boolean
+        }[]
+      >
 
       selectDirectory:
-        () => Promise<string | null>
+      () => Promise<string | null>
 
       readFile:
-        (path: string) => Promise<{
-          path: string
-          size: number
-          content: string
-          base64: string
-        }>
+      (path: string) => Promise<{
+        path: string
+        size: number
+        content: string
+        base64: string
+      }>
 
       triggerOSNotification:
-        (title: string, body: string) => void
+      (title: string, body: string) => void
 
       focusAppWindow:
-        () => void
+      () => void
 
       setAlwaysOnTop?:
-        (flag: boolean) => void
+      (flag: boolean) => void
 
       getAutostartStatus?:
-        () => Promise<boolean>
+      () => Promise<boolean>
 
       setAutostartStatus?:
-        (enable: boolean) => Promise<boolean>
+      (enable: boolean) => Promise<boolean>
 
-            onIntrusionAlert?:
-        (callback: (log: unknown) => void) => void
+      onIntrusionAlert?:
+      (callback: (log: unknown) => void) => void
 
       onIntrusionAction?:
-        (callback: (event: { action: 'view' | 'block'; ip: string }) => void) => void
+      (callback: (event: { action: 'view' | 'block'; ip: string }) => void) => void
 
+      openPath?:
+      (targetPath: string) => Promise<string>
     }
   }
 }

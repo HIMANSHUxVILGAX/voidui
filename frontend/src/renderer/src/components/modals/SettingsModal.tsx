@@ -85,7 +85,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         {/* Modal Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#08080c] shrink-0">
           <div className="flex items-center space-x-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#c89b3c]/10 border border-[#c89b3c]/30 flex items-center justify-center text-[#c89b3c]">
+            <div className="w-8 h-8 rounded-xl bg-[#deb00d]/10 border border-[#deb00d]/30 flex items-center justify-center text-[#deb00d]">
               <Sliders className="w-4 h-4" />
             </div>
             <div>
@@ -108,8 +108,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={() => setActiveSettingsTab('general')}
               className={`w-full px-3 py-2 rounded-xl text-left text-xs font-mono font-bold transition-all border ${activeSettingsTab === 'general'
-                  ? 'bg-[#c89b3c] text-black border-[#c89b3c] shadow-md shadow-[#c89b3c]/20'
-                  : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
+                ? 'bg-[#deb00d] text-black border-[#deb00d] shadow-sm shadow-black/50'
+                : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
                 }`}
             >
               General
@@ -117,8 +117,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={() => setActiveSettingsTab('containment')}
               className={`w-full px-3 py-2 rounded-xl text-left text-xs font-mono font-bold transition-all border ${activeSettingsTab === 'containment'
-                  ? 'bg-[#c89b3c] text-black border-[#c89b3c] shadow-md shadow-[#c89b3c]/20'
-                  : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
+                ? 'bg-[#deb00d] text-black border-[#deb00d] shadow-sm shadow-black/50'
+                : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
                 }`}
             >
               Containment
@@ -126,8 +126,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={() => setActiveSettingsTab('permissions')}
               className={`w-full px-3 py-2 rounded-xl text-left text-xs font-mono font-bold transition-all border ${activeSettingsTab === 'permissions'
-                  ? 'bg-[#c89b3c] text-black border-[#c89b3c] shadow-md shadow-[#c89b3c]/20'
-                  : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
+                ? 'bg-[#deb00d] text-black border-[#deb00d] shadow-sm shadow-black/50'
+                : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
                 }`}
             >
               Permissions
@@ -135,8 +135,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <button
               onClick={() => setActiveSettingsTab('help')}
               className={`w-full px-3 py-2 rounded-xl text-left text-xs font-mono font-bold transition-all border ${activeSettingsTab === 'help'
-                  ? 'bg-[#c89b3c] text-black border-[#c89b3c] shadow-md shadow-[#c89b3c]/20'
-                  : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
+                ? 'bg-[#deb00d] text-black border-[#deb00d] shadow-sm shadow-black/50'
+                : 'bg-transparent border-transparent text-[#8b9094] hover:text-white hover:bg-white/5'
                 }`}
             >
               Instructions
@@ -205,8 +205,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <button
                     onClick={() => setSystemRemediation(prev => !prev)}
                     className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase border transition-all ${systemRemediation
-                        ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
-                        : 'border-red-800 bg-red-950/20 text-red-400'
+                      ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
+                      : 'border-red-800 bg-red-950/20 text-red-400'
                       }`}
                   >
                     {systemRemediation ? 'GRANTED' : 'DENIED'}
@@ -228,8 +228,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         key={level}
                         onClick={() => setSystemAccessLevel(level)}
                         className={`px-3.5 py-1.5 rounded font-mono text-[10px] font-bold uppercase border transition-all ${systemAccessLevel === level
-                            ? 'border-studio-yellow bg-studio-yellowGlow text-studio-yellow font-bold'
-                            : 'border-studio-border bg-black/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                          ? 'border-studio-yellow bg-studio-yellowGlow text-studio-yellow font-bold'
+                          : 'border-studio-border bg-black/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
                           }`}
                       >
                         {level === 'storage' && 'Storage Only'}
@@ -274,8 +274,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <button
                     onClick={() => setModerateRiskPrompt(prev => !prev)}
                     className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase border transition-all ${moderateRiskPrompt
-                        ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
-                        : 'border-red-800 bg-red-950/20 text-red-400'
+                      ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
+                      : 'border-red-800 bg-red-950/20 text-red-400'
                       }`}
                   >
                     {moderateRiskPrompt ? 'ACTIVE' : 'MUTED'}
@@ -318,8 +318,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         key={size}
                         onClick={() => setFontSize(size)}
                         className={`px-3 py-1.5 rounded font-mono text-xs uppercase border transition-all ${fontSize === size
-                            ? 'border-studio-yellow bg-studio-yellowGlow text-studio-yellow font-bold'
-                            : 'border-studio-border bg-black/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                          ? 'border-studio-yellow bg-studio-yellowGlow text-studio-yellow font-bold'
+                          : 'border-studio-border bg-black/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
                           }`}
                       >
                         {size}
@@ -339,8 +339,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         key={scale}
                         onClick={() => setWindowScale(scale)}
                         className={`px-3 py-1.5 rounded font-mono text-xs border transition-all ${windowScale === scale
-                            ? 'border-studio-yellow bg-studio-yellowGlow text-studio-yellow font-bold'
-                            : 'border-studio-border bg-black/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
+                          ? 'border-studio-yellow bg-studio-yellowGlow text-studio-yellow font-bold'
+                          : 'border-studio-border bg-black/40 text-zinc-400 hover:border-zinc-700 hover:text-white'
                           }`}
                       >
                         {scale}
@@ -386,8 +386,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <button
                     onClick={() => setAutoLockdown(prev => !prev)}
                     className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase border transition-all ${autoLockdown
-                        ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
-                        : 'border-red-800 bg-red-950/20 text-red-400'
+                      ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
+                      : 'border-red-800 bg-red-950/20 text-red-400'
                       }`}
                   >
                     {autoLockdown ? 'ENABLED' : 'DISABLED'}
@@ -408,8 +408,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <button
                     onClick={() => setAudioAlerts(prev => !prev)}
                     className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase border transition-all ${audioAlerts
-                        ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
-                        : 'border-red-800 bg-red-950/20 text-red-400'
+                      ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
+                      : 'border-red-800 bg-red-950/20 text-red-400'
                       }`}
                   >
                     {audioAlerts ? 'ON' : 'OFF'}
@@ -430,8 +430,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <button
                     onClick={() => setEditorAutoSave(prev => !prev)}
                     className={`px-3 py-1.5 rounded font-mono text-xs font-bold uppercase border transition-all ${editorAutoSave
-                        ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
-                        : 'border-red-800 bg-red-950/20 text-red-400'
+                      ? 'border-emerald-700 bg-emerald-950/20 text-emerald-400'
+                      : 'border-red-800 bg-red-950/20 text-red-400'
                       }`}
                   >
                     {editorAutoSave ? 'ON' : 'OFF'}

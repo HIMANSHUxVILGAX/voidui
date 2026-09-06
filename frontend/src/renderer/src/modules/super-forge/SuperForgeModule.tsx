@@ -132,11 +132,11 @@ export const LumenModule: React.FC<LumenModuleProps> = ({ activeMod }) => {
       {/* Header Bar */}
       <header className="px-6 py-3.5 bg-[#08080c]/90 backdrop-blur-xl border-b border-white/10 flex items-center justify-between z-10 shadow-md">
         <div className="flex items-center space-x-3">
-          <div className="w-7 h-7 rounded-xl bg-[#c89b3c]/20 border border-[#c89b3c]/40 flex items-center justify-center text-[#c89b3c] shadow-[0_0_12px_rgba(200,155,60,0.3)]">
+          <div className="w-7 h-7 rounded-xl bg-[#deb00d]/10 border border-[#deb00d]/30 flex items-center justify-center text-[#deb00d] shadow-sm shadow-black/50">
             <Sparkles className="w-4 h-4" />
           </div>
           <span className="font-extrabold text-sm tracking-wider text-white font-mono">
-            VØID <span className="text-[#c89b3c]">{'//'}</span> LUMEN
+            VØID <span className="text-[#deb00d]">{'//'}</span> LUMEN
           </span>
           <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-800/50 font-mono font-bold">
             NEURAL CORE ONLINE
@@ -155,8 +155,8 @@ export const LumenModule: React.FC<LumenModuleProps> = ({ activeMod }) => {
               key={id}
               onClick={() => setSelectedPersona(id)}
               className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-full border text-xs font-sans transition-all ${isSelected
-                  ? meta.color + ' font-semibold shadow-sm'
-                  : 'border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200 bg-[#1a1a1e]'
+                ? meta.color + ' font-semibold shadow-sm'
+                : 'border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200 bg-[#1a1a1e]'
                 }`}
             >
               <IconComponent className="w-3.5 h-3.5" />
@@ -177,8 +177,8 @@ export const LumenModule: React.FC<LumenModuleProps> = ({ activeMod }) => {
             >
               <div
                 className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg ${isUser
-                    ? 'bg-blue-600/20 text-blue-400 border border-blue-500/40'
-                    : 'bg-cyan-600/20 text-cyan-400 border border-cyan-500/40'
+                  ? 'bg-blue-600/20 text-blue-400 border border-blue-500/40'
+                  : 'bg-cyan-600/20 text-cyan-400 border border-cyan-500/40'
                   }`}
               >
                 {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
@@ -186,8 +186,8 @@ export const LumenModule: React.FC<LumenModuleProps> = ({ activeMod }) => {
 
               <div
                 className={`max-w-[82%] rounded-2xl p-4 border font-sans ${isUser
-                    ? 'bg-[#1f293d] border-blue-500/30 text-slate-100'
-                    : 'bg-[#18181c] border-slate-800 text-slate-200 shadow-xl'
+                  ? 'bg-[#1f293d] border-blue-500/30 text-slate-100'
+                  : 'bg-[#18181c] border-slate-800 text-slate-200 shadow-xl'
                   }`}
               >
                 {!isUser && (

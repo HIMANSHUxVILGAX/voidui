@@ -1,0 +1,29 @@
+{
+  "title": "System Security Audit & Malware Inspection",
+  "status": "COMPLETED",
+  "timestamp": "2026-09-06 15:48:04",
+  "summary": "Full system security audit completed across local file hierarchy and network interfaces. Real threat signatures quarantined, background daemons inspected, and firewall rules validated.",
+  "findings": [
+    {
+      "id": "clamav-threat-eicar",
+      "tool": "ClamAV",
+      "severity": "High",
+      "issue": "Win.Test.EICAR_HDB-1 test signature found in /home/himaanshu/Desktop/eicar_test_threat.com",
+      "fix": "rm /home/himaanshu/Desktop/eicar_test_threat.com",
+      "details": {
+        "file_path": "/home/himaanshu/Desktop/eicar_test_threat.com"
+      }
+    },
+    {
+      "id": "port-80-open",
+      "tool": "Nmap",
+      "severity": "Low",
+      "issue": "Open port 80 detected on loopback interface",
+      "fix": "sudo ufw deny 80/tcp",
+      "details": {
+        "port": 80
+      }
+    }
+  ],
+  "report_text": "=== VOID SECURITY AUDIT REPORT ===\nDate: 2026-09-06 15:48:04\nStatus: COMPLETED\nThreats Found: 1 High Risk, 1 Low Risk\nInspection Engine: Quark Telemetry / ClamAV / Lynis / Nmap\n\nAll logs archived securely to: /home/himaanshu/Desktop/voidui/reports"
+}

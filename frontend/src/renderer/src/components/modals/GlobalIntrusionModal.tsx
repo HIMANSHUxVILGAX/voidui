@@ -29,8 +29,8 @@ export const GlobalIntrusionModal: React.FC<GlobalIntrusionModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-xl bg-slate-900/95 border-2 border-red-500/80 rounded-2xl shadow-[0_0_50px_rgba(239,68,68,0.4)] overflow-hidden font-sans text-slate-100">
-        
+      <div className="relative w-full max-w-xl bg-slate-900/95 border-2 border-red-500/80 rounded-2xl shadow-2xl shadow-black overflow-hidden font-sans text-slate-100">
+
         {/* Top Pulsating Hazard Banner */}
         <div className="bg-gradient-to-r from-red-950 via-red-900/90 to-red-950 px-6 py-4 border-b border-red-500/40 flex items-center justify-between">
           <div className="flex items-center gap-3">

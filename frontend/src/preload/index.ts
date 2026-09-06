@@ -52,6 +52,9 @@ const api = {
   },
   setAutostartStatus: (enable: boolean): Promise<boolean> => {
     return ipcRenderer.invoke('set-autostart-status', enable)
+  },
+  openPath: (targetPath: string): Promise<string> => {
+    return ipcRenderer.invoke('open-path', targetPath)
   }
 }
 // Use `contextBridge` APIs to expose Electron APIs to

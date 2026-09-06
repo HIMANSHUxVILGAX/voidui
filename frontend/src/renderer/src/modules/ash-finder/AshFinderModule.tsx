@@ -16,7 +16,7 @@ export const MagModule: React.FC<MagModuleProps> = ({ activeMod }) => {
 
       {/* Clean Centered Standby Content */}
       <div className="flex flex-col items-center justify-center space-y-4 z-10 text-center max-w-md px-6">
-        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[#c89b3c] shadow-[0_0_25px_rgba(200,155,60,0.15)]">
+        <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[#deb00d] shadow-md shadow-black/60">
           <Code className="w-6 h-6" />
         </div>
 
